@@ -3,7 +3,7 @@
 **Event:** MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah — Wednesday 18 November 2026.
 **Team:** AXIONS — GDG On Campus CUI Attock. Lead + presenter: Abdul Wahid.
 
-**Live demo (sample run):** https://mtm-hackathon-26.vercel.app - the plan page the system generated for the sample pack, including the budget change and the rejected message.
+**Live web app:** https://mtm-hackathon-26.vercel.app - upload your own message pack and the same agent runs in your browser: plan, fact ledger, agent chat, risks and recommendations, try-to-break panel and the full trace. Plus How it works, Privacy and Terms pages.
 
 ## The task
 

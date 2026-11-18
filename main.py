@@ -657,6 +657,144 @@ def build_plan(facts):
     return plan
 
 
+def recommendations(facts, plan):
+    """Code-generated risk flags and fixes, computed from the plan's own
+    figures - never model-invented. Each item names the numbers and the
+    concrete lever that resolves it."""
+    out = []
+    cap = plan["budget_cap"]
+    rem = plan["budget_remaining"]
+    people = plan["people_to_feed"]
+    foods = current_food_options(facts)
+    chosen_food = plan["food"]
+    chosen_venue = plan["venue"]
+    levers = []
+    if chosen_food and people:
+        for alt in foods:
+            if alt is chosen_food:
+                continue
+            saving = ((chosen_food.get("price_per_head") or 0)
+                      - (alt.get("price_per_head") or 0)) * people
+            if saving > 0:
+                levers.append(
+                    "switch food to %s (Rs %s per head) and save Rs %s"
+                    % (alt.get("name"), fmt(alt.get("price_per_head")),
+                       fmt(saving)))
+    if chosen_venue:
+        for v in facts["venue_options"]:
+            if v is chosen_venue:
+                continue
+            if people is not None and (v.get("capacity") or 0) >= people \
+                    and (v.get("price") or 0) < (chosen_venue.get("price") or 0):
+                levers.append("move to %s and save Rs %s"
+                              % (v.get("name"),
+                                 fmt((chosen_venue.get("price") or 0)
+                                     - (v.get("price") or 0))))
+    if cap is not None and rem is not None:
+        if rem < 0:
+            txt = "The plan is Rs %s OVER the budget cap." % fmt(-rem)
+            if levers:
+                txt += (" To get back inside the cap: "
+                        + "; ".join(levers) + ".")
+            out.append(("risk", txt))
+        elif rem < 0.10 * cap:
+            txt = ("Budget headroom is thin: only Rs %s of Rs %s is left "
+                   "(%.0f%%). Any new cost above Rs %s breaks the cap."
+                   % (fmt(rem), fmt(cap), 100.0 * rem / cap, fmt(rem)))
+            if levers:
+                txt += " Room can be freed: " + "; ".join(levers) + "."
+            out.append(("risk", txt))
+    if chosen_venue and people:
+        spare = (chosen_venue.get("capacity") or 0) - people
+        if 0 <= spare <= 0.15 * people:
+            bigger = [v for v in facts["venue_options"]
+                      if (v.get("capacity") or 0)
+                      > (chosen_venue.get("capacity") or 0)]
+            txt = ("Venue headroom is small: %s seats %s for %s people - "
+                   "only %s spare seats if attendance grows."
+                   % (chosen_venue.get("name"),
+                      fmt(chosen_venue.get("capacity")), fmt(people),
+                      fmt(spare)))
+            if bigger:
+                b = sorted(bigger, key=lambda x: x.get("price") or 0)[0]
+                txt += (" The next larger option is %s (seats %s, Rs %s)."
+                        % (b.get("name"), fmt(b.get("capacity")),
+                           fmt(b.get("price"))))
+            out.append(("advice", txt))
+    if plan["venue_relaxed"] and chosen_venue:
+        feats = [norm(x) for x in chosen_venue.get("features") or []]
+
+        def has(rf):
+            return any(rf == f or set(rf.split()) <= set(f.split())
+                       or set(f.split()) <= set(rf.split()) for f in feats)
+        missing = [r for r in
+                   facts["venue_requirements"].get("required_features", [])
+                   if not has(norm(r))]
+        out.append(("risk",
+                    "No venue offers every required feature, so the plan "
+                    "uses %s without: %s. Confirm the feature with the "
+                    "venue, or drop the requirement."
+                    % (chosen_venue.get("name"),
+                       ", ".join(missing) if missing else "some requirements")))
+    needed = plan["judges_needed"]
+    confirmed = plan["judges_confirmed"]
+    if needed is not None and confirmed is not None:
+        if confirmed < needed:
+            out.append(("risk",
+                        "Only %s of the %s judges needed are confirmed - "
+                        "judging cannot cover all %s teams. Recruit at "
+                        "least %s more judge(s), or raise the per-judge "
+                        "team cap."
+                        % (fmt(confirmed), fmt(needed), fmt(plan["teams"]),
+                           fmt(needed - confirmed))))
+        elif plan["judges_used"] and confirmed - needed <= 1 \
+                and plan["judges_used"] > 1:
+            mins = facts["judging"].get("minutes_per_team")
+            if mins:
+                rounds2 = math.ceil(plan["teams"]
+                                    / float(plan["judges_used"] - 1))
+                delta = rounds2 * mins - (plan["judging_minutes"] or 0)
+                if delta > 0:
+                    out.append(("advice",
+                                "There is almost no spare judging capacity "
+                                "(%s confirmed, %s needed). If one judge "
+                                "drops out, judging grows by %s minutes "
+                                "and the schedule no longer fits - line up "
+                                "a backup judge."
+                                % (fmt(confirmed), fmt(needed), fmt(delta))))
+    if chosen_food and len(foods) == 1:
+        out.append(("advice",
+                    "Only one food option was quoted (%s), so there is no "
+                    "cheaper fallback if its price rises. Ask the caterer "
+                    "for a second tier as a backup."
+                    % chosen_food.get("name")))
+    hacking = sum(b["minutes"] for b in plan["schedule"]
+                  if "Hacking" in b["item"])
+    duration = facts["event"].get("duration_minutes")
+    if duration and 0 < hacking < 45:
+        out.append(("advice",
+                    "Hacking time is squeezed to %s minutes - the fixed "
+                    "items (opening, judging, breaks, closing) take %s "
+                    "of the %s minutes. Trim judging rounds or extend "
+                    "the event if teams need more build time."
+                    % (fmt(hacking), fmt(duration - hacking),
+                       fmt(duration))))
+    if facts["requests"]:
+        out.append(("advice",
+                    "%d request(s) are noted but not budgeted (first: "
+                    "%s). Approving any of them has to come out of the "
+                    "Rs %s still remaining - the plan does not include "
+                    "them."
+                    % (len(facts["requests"]),
+                       str(facts["requests"][0].get("summary", ""))[:90],
+                       fmt(rem))))
+    if not out:
+        out.append(("advice",
+                    "No risks flagged: budget, venue, judges and "
+                    "schedule all have healthy headroom."))
+    return out
+
+
 def fmt(n):
     if n is None:
         return "-"
@@ -705,6 +843,13 @@ def render_plan_text(state):
     for c in plan["checks"]:
         out.append("    [%s] %s - %s" %
                    ("PASS" if c["ok"] else "FAIL", c["name"], c["detail"]))
+    recos = recommendations(facts, plan)
+    if recos:
+        out.append("")
+        out.append("RISKS AND RECOMMENDATIONS:")
+        for level, text in recos:
+            out.append("    [%s] %s"
+                       % ("RISK" if level == "risk" else "ADVICE", text))
     if facts["requests"]:
         out.append("")
         out.append("REQUESTS NOTED (not approved, not in the plan):")
@@ -853,6 +998,19 @@ def render_html(state, trace_text):
     stats = ("<p class='sub'>Model calls so far: %s &middot; "
              "Total tokens (as reported by the API): %s</p>"
              % (fmt(state["model_calls"]), fmt(state["total_tokens"])))
+    reco_html = ""
+    recos = recommendations(facts, plan)
+    if recos:
+        reco_items = "".join(
+            "<li class='%s'><b>%s</b> %s</li>"
+            % ("rk" if lv == "risk" else "ad",
+               "RISK" if lv == "risk" else "ADVICE", esc(t))
+            for lv, t in recos)
+        reco_html = ("<h2>Risks and recommendations</h2>"
+                     "<p class='note'>Generated in code from the plan's "
+                     "own figures - each item names the problem and the "
+                     "lever that fixes it.</p><ul class='reco'>%s</ul>"
+                     % reco_items)
     html = """<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -867,6 +1025,9 @@ border-bottom:1px solid #E7E5E4}
 .note{color:#57534E;font-size:14px;margin:0 0 10px}
 ::selection{background:#0F766E;color:#fff}
 summary{cursor:pointer;font-weight:600}
+.reco li{margin:7px 0}
+.reco .rk b{color:#B91C1C}
+.reco .ad b{color:#0F766E}
 .pbtn:focus-visible,summary:focus-visible{outline:2px solid #0F766E;
 outline-offset:2px}
 .sub{color:#57534E;margin-bottom:16px}
@@ -958,6 +1119,7 @@ padding:12px;overflow-x:auto}
 <h2>Budget detail</h2><table>%s
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs %s</b></td></tr></table>
 <h2>Checks</h2><p class='note'>Six deterministic checks, run in code after every build. The plan counts as valid only while all of them pass.</p><ul>%s</ul>
+%s
 </section>
 <section id="view-facts" class="view">
 %s%s%s
@@ -997,7 +1159,7 @@ if(h){var t=document.querySelector('[data-view="'+h+'"]');if(t){t.click();}}
         fmt(plan["budget_total"]), fmt(plan["budget_cap"]),
         fmt(plan["budget_remaining"]), meter,
         timeline, sched, rows, fmt(plan["budget_total"]), checks,
-        ledger_html, req, cons_html, hist_html, rej,
+        reco_html, ledger_html, req, cons_html, hist_html, rej,
         stats, esc(trace_text))
     with open(HTML_PATH, "w", encoding="utf-8") as fh:
         fh.write(html)

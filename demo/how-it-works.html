@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="in">
+<a class="brand" href="index.html"><span class="mark"></span>AXIONS
+<small>Hackathon Planner</small></a>
+<button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<nav class="mainnav" id="mainnav">
+<a href="index.html">Planner</a>
+<a href="how-it-works.html" class="here">How it works</a>
+<a href="privacy.html">Privacy</a>
+<a href="terms.html">Terms</a>
+<a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div></header>
+<title>How it works - AXIONS Hackathon Planner</title>
+<nav class="crumbs"><a href="index.html">Home</a><span class="sep">›</span><span class="now">How it works</span></nav>
+<div class="wrap"><main class="prose">
+<h1>How it works</h1>
+<p class="sub">One small model reads. Plain code plans, checks, and defends the plan.</p>
+<div class="steps">
+<div class="card"><div class="stepnum">1</div><h3>The model reads</h3><p>Every message in the pack - English, Urdu script or Roman Urdu - goes through one small model (gpt-oss-20b) in a single call. It extracts structured facts: students, venues, prices, judges, committed costs, requirements. It never does arithmetic and never decides.</p></div>
+<div class="card"><div class="stepnum">2</div><h3>Code plans</h3><p>Teams, judges needed, people to feed, the cheapest venue that fits, food within the cap, a schedule that sums exactly to the event length - all computed in code, where arithmetic cannot hallucinate. Newer dated messages replace older ones; renamed items are matched, never double-counted.</p></div>
+<div class="card"><div class="stepnum">3</div><h3>Validators guard</h3><p>Six checks run after every build: budget, venue fit, food, judges, schedule, coverage. A quantity scan - digits, spelled-out numbers, even Urdu digits - catches messages that would starve the plan, and updates are transactions: if an update would break a check that currently passes, it is rolled back and the reason is printed.</p></div>
+</div>
+<h2>What makes it different</h2>
+<ul>
+<li><b>Fact ledger.</b> Every figure in the plan names the message it came from. Click any number on the plan to see its source.</li>
+<li><b>Risks and recommendations.</b> The agent reads its own plan for thin headroom - budget, venue seats, spare judges, squeezed hacking time - and names the lever that fixes each one.</li>
+<li><b>Agent chat.</b> After a plan is built you can talk to the agent: send updates in plain words, or ask "budget kitna bacha?" - questions are answered from the plan, with no model call.</li>
+<li><b>Try to break it.</b> Tricky messages - wrong quantities, unapproved requests, outdated prices - can be fired at the live plan to watch it defend itself.</li>
+<li><b>Token-lean.</b> One model call for a whole pack, at most two for an update, and every call is printed in the trace with the tokens the API reported.</li>
+</ul>
+<h2>Two ways to run it</h2>
+<p><b>This website</b> runs the same logic in your browser: upload a messages file, add your own API key, and the plan, the chat and the trace all happen on the page. <b>The terminal version</b> in the repository runs the identical design from one command - <i>python3 main.py messages.txt</i> - and writes plan.txt, trace.txt and the same plan page to disk.</p>
+</main></div>
+<footer class="site-footer"><div class="in">
+<div class="foot-links">
+<div><b>PAGES</b><a href="index.html">Planner</a><a href="how-it-works.html">How it works</a></div>
+<div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="index.html">Live planner</a></div>
+</div>
+<p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
+<div class="wordmark">AXIONS</div>
+</div></footer>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script>
+</body>
+</html>

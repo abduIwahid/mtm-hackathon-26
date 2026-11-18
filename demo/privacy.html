@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="in">
+<a class="brand" href="index.html"><span class="mark"></span>AXIONS
+<small>Hackathon Planner</small></a>
+<button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<nav class="mainnav" id="mainnav">
+<a href="index.html">Planner</a>
+<a href="how-it-works.html">How it works</a>
+<a href="privacy.html" class="here">Privacy</a>
+<a href="terms.html">Terms</a>
+<a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div></header>
+<title>Privacy - AXIONS Hackathon Planner</title>
+<nav class="crumbs"><a href="index.html">Home</a><span class="sep">›</span><span class="now">Privacy</span></nav>
+<div class="wrap"><main class="prose">
+<h1>Privacy</h1>
+<p class="sub">Short version: this site has no server and no accounts. Your file and your key stay in your browser, except for the one thing the tool exists to do - sending your message text to the model API you choose.</p>
+<h2>What leaves your browser</h2>
+<ul>
+<li><b>Your message text</b> is sent to the API endpoint shown in Advanced settings (by default Groq, https://api.groq.com) so the model can read it. That provider's own privacy policy governs what it does with the text. Do not paste confidential material you would not send to that provider.</li>
+<li><b>Your API key</b> is sent only to that same endpoint, as the authorization header of the model calls. It is never sent to us - there is no "us" server - and it is not stored: it lives in the page's memory and disappears when you close the tab.</li>
+</ul>
+<h2>What never leaves your browser</h2>
+<ul>
+<li>The plan, the fact ledger, the chat and the trace are computed and displayed locally. They are not uploaded anywhere.</li>
+<li>No cookies, no analytics, no tracking, no fingerprinting. This site sets nothing on your device.</li>
+<li>The file you upload is read locally in the page. It is not transmitted as a file; only its text goes into the model calls described above.</li>
+</ul>
+<h2>The terminal version</h2>
+<p>The command-line version in the repository runs on your own machine. It makes the same model calls with your key and writes its outputs (plan, trace, state) to a local folder. Nothing else is transmitted.</p>
+<h2>Changes</h2>
+<p>If this policy changes, the new version will be published on this page with the change described in the repository history.</p>
+</main></div>
+<footer class="site-footer"><div class="in">
+<div class="foot-links">
+<div><b>PAGES</b><a href="index.html">Planner</a><a href="how-it-works.html">How it works</a></div>
+<div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="index.html">Live planner</a></div>
+</div>
+<p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
+<div class="wordmark">AXIONS</div>
+</div></footer>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script>
+</body>
+</html>
