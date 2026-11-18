@@ -9,7 +9,7 @@ a{color:#0F766E}
 /* ---------- site header ---------- */
 .site-header{background:#1C1917;color:#FAFAF9;position:sticky;top:0;
 z-index:50}
-.site-header .in{max-width:920px;margin:0 auto;padding:12px 20px;
+.site-header .in{max-width:1400px;margin:0 auto;padding:12px clamp(16px,4vw,44px);
 display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;color:#FAFAF9;
 text-decoration:none;font-weight:800;letter-spacing:.04em;font-size:17px}
@@ -33,7 +33,7 @@ margin:4px 0}
 }
 
 /* ---------- breadcrumbs ---------- */
-.crumbs{max-width:920px;margin:0 auto;padding:12px 20px 0;font-size:13px;
+.crumbs{max-width:1400px;margin:0 auto;padding:12px clamp(16px,4vw,44px) 0;font-size:13px;
 color:#78716C}
 .crumbs a{color:#78716C;text-decoration:none}
 .crumbs a:hover{color:#0F766E}
@@ -42,15 +42,15 @@ color:#78716C}
 
 /* ---------- footer ---------- */
 .site-footer{border-top:1px solid #E7E5E4;margin-top:44px;background:#fff}
-.site-footer .in{max-width:920px;margin:0 auto;padding:26px 20px 30px}
-.foot-links{display:flex;gap:26px;flex-wrap:wrap;font-size:14px}
+.site-footer .in{max-width:1400px;margin:0 auto;padding:26px clamp(16px,4vw,44px) 30px}
+.foot-links{display:flex;gap:clamp(18px,4vw,48px);flex-wrap:wrap;font-size:14px}
 .foot-links div b{display:block;font-size:12px;letter-spacing:.08em;
 color:#0F766E;margin-bottom:6px}
 .foot-links a{display:block;color:#44403C;text-decoration:none;
 padding:2px 0}
 .foot-links a:hover{color:#0F766E}
 .foot-note{color:#78716C;font-size:13px;margin-top:18px}
-.wordmark{font-size:64px;font-weight:800;color:#F5F5F4;
+.wordmark{font-size:clamp(38px,9vw,120px);font-weight:800;color:#F5F5F4;
 letter-spacing:.02em;line-height:1;text-align:center;margin-top:10px;
 user-select:none}
 
