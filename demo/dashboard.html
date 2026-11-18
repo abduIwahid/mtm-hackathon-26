@@ -8,7 +8,10 @@
 @keyframes fadein{to{opacity:1}}
 @keyframes sweep{from{stroke-dashoffset:188.5}to{stroke-dashoffset:var(--off)}}
 @keyframes pop{from{opacity:0;transform:scale(.92) rotate(-6deg)}to{opacity:1;transform:none}}
-.dshell{display:flex;gap:18px;align-items:stretch}
+.dshell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+.dshell>*,.dmain>*,.drow>*{min-width:0}
+.dside{min-width:0;overflow:hidden}
+.dmain{min-width:0}
 .dside{width:230px;flex:none;background:#0B3B39;color:#E7E5E4;border-radius:20px;
 padding:24px 18px;display:flex;flex-direction:column;animation:rise .6s ease both}
 .dlogo{display:flex;gap:9px;align-items:center;font-weight:800;font-size:19px;margin-bottom:26px}
@@ -21,25 +24,28 @@ border-radius:10px;font-size:15px;margin:2px 0;transition:all .25s ease}
 .dcard:hover{transform:translateY(-3px)}
 .dcard b{font-size:14px}.dcard p{margin:4px 0 0;font-size:12.5px;opacity:.85}
 .dnote{margin-top:auto;background:#08302E;border-radius:12px;padding:12px 14px;font-size:13.5px}
-.dmain{flex:1;display:flex;flex-direction:column;gap:18px;min-width:0}
-.drow{display:flex;gap:18px}
+.dmain{display:grid;gap:18px;min-width:0}
+.drow{display:grid;gap:18px;min-width:0}
+.drow.r1{grid-template-columns:290px minmax(0,1fr)}
+.drow.r2{grid-template-columns:minmax(0,1fr) 300px}
+.drow.r3{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
 .dbox{background:#fff;border:1px solid #E7E5E4;border-radius:18px;padding:20px 22px;
 box-shadow:0 4px 18px rgba(28,25,23,.06);transition:transform .3s ease,box-shadow .3s ease;
 animation:rise .6s ease both}
 .dbox:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(28,25,23,.13)}
 .dbox h3{margin:0 0 4px;font-size:16.5px}
 .dbox .sub{color:#78716C;font-size:13px;margin:0 0 10px}
-.welcome{width:290px;flex:none}
+.welcome{min-width:0}
 .avatar{width:56px;height:56px;border-radius:50%;background:#0F766E;color:#fff;
 display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
 .welcome h2{margin:10px 0 2px;font-size:21px}
 .welcome p{margin:0;color:#78716C;font-size:12.5px;letter-spacing:.05em}
-.chips{display:flex;gap:14px}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:14px}
 .chip{flex:1;border-radius:14px;padding:14px 16px;color:#fff;
 transition:transform .3s ease,box-shadow .3s ease}
 .chip:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 14px 28px rgba(28,25,23,.18)}
 .chip small{display:block;font-size:12.5px;opacity:.9}
-.chip b{font-size:27px}
+.chip b{font-size:clamp(20px,2vw,27px)}
 .c1{background:#F59E0B}.c2{background:#0F766E}.c3{background:#44403C}
 .flowline{stroke-dasharray:100;stroke-dashoffset:100;animation:draw 1.8s ease .4s forwards}
 .flowarea{opacity:0;animation:fadein 1.2s ease 1s forwards}
@@ -65,12 +71,17 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 .stackwrap:hover .sc1{transform:translate(-118px,44px) rotate(-7deg)}
 .stackwrap:hover .sc2{transform:translate(118px,44px) rotate(7deg)}
 .stackwrap:hover .sc3{transform:translateY(-8px)}
-.act div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline}
+.act div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline;min-width:0}
+.act div span:first-of-type{min-width:0;overflow-wrap:break-word}
+.act div span:last-child{flex:none}
 .act i{width:9px;height:9px;border-radius:50%;background:#0F766E;flex:none;position:relative;top:1px}
 .act i.warn{background:#F59E0B}.act i.bad{background:#B91C1C}
 .act span{color:#78716C;margin-left:auto;font-size:12.5px;white-space:nowrap}
-@media (max-width:900px){.dshell{flex-direction:column}.dside{width:auto}
-.drow{flex-direction:column}.welcome{width:auto}.stackwrap{height:210px}}
+@media (max-width:1100px){.dshell{grid-template-columns:1fr}
+.dside{width:auto}.dnav{display:flex;flex-wrap:wrap;gap:4px}
+.drow.r1,.drow.r2{grid-template-columns:1fr}}
+@media (max-width:640px){.stackwrap{height:210px}
+.scard{width:min(250px,86vw)}}
 html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
 </style>
 </head>
@@ -106,11 +117,11 @@ html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
 <div class="dnote">The model reads. Code decides.</div>
 </aside>
 <div class="dmain">
-<div class="drow">
+<div class="drow r1">
 <div class="dbox welcome" style="animation-delay:.05s"><div class="avatar">AX</div>
 <h2>Team AXIONS</h2><p>WELCOME TO DASHBOARD</p>
 <p style="margin-top:12px">MTM HACKATHON '26<br><span id="dashWhen">LATEST SAVED PLAN</span></p></div>
-<div class="dbox" style="flex:1;animation-delay:.12s"><h3 id="dashTitle">Current plan</h3>
+<div class="dbox" style="animation-delay:.12s"><h3 id="dashTitle">Current plan</h3>
 <div class="sub" id="dashVerdict"></div>
 <div class="chips">
 <div class="chip c1"><small>Total budget</small><b>Rs <span class="count" id="cTotal">0</span></b></div>
@@ -118,22 +129,22 @@ html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
 <div class="chip c3"><small>Judges</small><b><span class="count" id="cJudges">0</span></b></div>
 </div></div>
 </div>
-<div class="drow">
-<div class="dbox" style="flex:1;animation-delay:.2s"><h3>Schedule flow</h3>
+<div class="drow r2">
+<div class="dbox" style="animation-delay:.2s"><h3>Schedule flow</h3>
 <p class="sub">One smooth flow across the event - hover nothing, it just flows.</p>
 <div id="dashChart"></div></div>
-<div class="dbox" style="width:300px;flex:none;animation-delay:.28s"><h3>Budget composition</h3>
+<div class="dbox" style="animation-delay:.28s"><h3>Budget composition</h3>
 <p class="sub">Where the money goes - hover a slice</p>
 <div class="donutwrap" style="display:flex;justify-content:center" id="dashDonut"></div>
 <div id="dashLegend"></div></div>
 </div>
-<div class="drow">
-<div class="dbox" style="width:330px;flex:none;animation-delay:.36s"><h3>Plan layers - stacked</h3>
+<div class="drow r3">
+<div class="dbox" style="animation-delay:.36s"><h3>Plan layers - stacked</h3>
 <p class="sub">The plan, layer by layer - hover to fan the stack</p>
 <div class="stackwrap" id="dashStack"></div></div>
-<div class="dbox" style="flex:1;animation-delay:.44s"><h3>Plan health</h3>
+<div class="dbox" style="animation-delay:.44s"><h3>Plan health</h3>
 <div class="rings" id="dashRings"></div></div>
-<div class="dbox act" style="width:330px;flex:none;animation-delay:.52s"><h3>Latest activity</h3>
+<div class="dbox act" style="animation-delay:.52s"><h3>Latest activity</h3>
 <div id="dashActivity"></div></div>
 </div>
 <div class="dbox" id="dashRisksBox" style="animation-delay:.6s;display:none"><h3>Risks and recommendations</h3>
@@ -169,7 +180,7 @@ var raw=null; try{ raw=localStorage.getItem("axions-planner-v1"); }catch(e){}
 var d=null; try{ d=raw?JSON.parse(raw):null; }catch(e){}
 if(!d||!d.plan){ document.getElementById("dashEmpty").style.display="block"; }
 else{
-  document.getElementById("dashShell").style.display="flex";
+  document.getElementById("dashShell").style.display="grid";
   var p=d.plan, f=d.facts;
   var passed=p.checks.filter(function(c){return c.ok}).length;
   document.getElementById("dashVerdict").textContent =

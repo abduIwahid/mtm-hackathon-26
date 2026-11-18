@@ -285,3 +285,10 @@ html[data-theme="dark"] .foot-note{color:#78716C}
 html[data-theme="dark"] .wordmark{color:#1C1917}
 html[data-theme="dark"] main p a,html[data-theme="dark"] main li a{
 color:#2DD4BF}
+
+/* fluid safety: nothing may force horizontal scroll */
+html,body{overflow-x:clip}
+svg{max-width:100%}
+.wrap{min-width:0}
+.tabs{flex-wrap:wrap}
+.cards{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
