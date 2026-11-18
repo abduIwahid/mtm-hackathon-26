@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About - AXIONS Hackathon Planner</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="in">
+<a class="brand" href="index.html"><span class="mark"></span>AXIONS
+<small>Hackathon Planner</small></a>
+<button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<nav class="mainnav" id="mainnav">
+<a href="index.html">Home</a>
+<a href="assessment.html">New assessment</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="how-it-works.html">How it works</a>
+<a href="about.html" class="here">About</a>
+<a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div></header>
+<div class="wrap"><p class="crumbs"><a href="index.html">Home</a> &rsaquo; About</p><main>
+<h1>About this project</h1>
+<p class="sub">An agent system built for MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah, by Team AXIONS of GDG On Campus CUI Attock.</p>
+<h2>The task</h2>
+<p>Read a pack of about ten messages - emails, WhatsApp texts and notices, in English and Roman Urdu, some irrelevant and some out of date - and plan a four-hour physical hackathon: venue, schedule, food, judging and budget, respecting every stated constraint. At judging, the pack is unseen: different numbers, different wording, different senders.</p>
+<h2>The principle</h2>
+<p><b>The model reads; the code decides.</b> Language models are good at reading messy human messages and bad at arithmetic you must trust. So the model does exactly one job - turning message text into structured, dated facts - and plain code does everything else: merging, planning, the six validity checks, rejecting harmful updates, and computing every risk and recommendation. Every figure in a plan can be traced to the message it came from.</p>
+<h2>How it is built</h2>
+<ul>
+<li><b>One small model</b> - openai/gpt-oss-20b via Groq, for every call. A full run takes about five seconds and one reading call; an update takes at most two calls.</li>
+<li><b>A Python core</b> (standard library only) that runs the whole system from one command - and this website, whose planner is a line-by-line port of the same engine.</li>
+<li><b>A guarded fact base</b> - facts carry their source message and date; later quotes supersede earlier ones; quantity conflicts are caught by a deterministic scan in digits, spelled-out words and Urdu digits.</li>
+<li><b>Proof, not promises</b> - an offline test suite (23 checks) covers the defences and the end-to-end flows, and every plan ships with its full trace.</li>
+</ul>
+<h2>The team</h2>
+<p>Team AXIONS - GDG On Campus CUI Attock. Lead: Abdul Wahid. The system was designed so that any member can explain any part of it: five parts, each with one job, each missed if removed.</p>
+<div class="cta"><a class="btn" href="assessment.html">Try the planner</a>
+<a class="btn ghost" href="https://github.com/abduIwahid/mtm-hackathon-26">Source on GitHub</a></div>
+</main></div>
+<footer class="site-footer"><div class="in">
+<div class="foot-links">
+<div><b>PAGES</b><a href="index.html">Home</a><a href="assessment.html">New assessment</a><a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it works</a><a href="about.html">About</a></div>
+<div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="assessment.html">Live planner</a></div>
+</div>
+<p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
+<div class="wordmark">AXIONS</div>
+</div></footer>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script><script>var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});</script>
+</body>
+</html>

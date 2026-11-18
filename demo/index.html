@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Planner - AXIONS Hackathon Planner</title>
-<meta name="description" content="Upload a pack of event messages and get a validated hackathon plan - venue, schedule, food, judging and budget - with risks and recommendations.">
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Home - AXIONS Hackathon Planner</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -13,81 +9,62 @@
 <small>Hackathon Planner</small></a>
 <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
 <nav class="mainnav" id="mainnav">
-<a href="index.html" class="here">Planner</a>
+<a href="index.html" class="here">Home</a>
+<a href="assessment.html">New assessment</a>
+<a href="dashboard.html">Dashboard</a>
 <a href="how-it-works.html">How it works</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
+<a href="about.html">About</a>
 <a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
 </nav>
 </div></header>
-<nav class="crumbs"><a href="index.html">Home</a><span class="sep">›</span><a href="index.html">Planner</a><span class="sep">›</span><span class="now" id="crumbNow">New plan</span></nav>
-<div class="wrap">
-<main>
-<h1>Plan a hackathon from its messages</h1>
-<p class="sub">Upload the message pack - emails, WhatsApp notes, notices, in English, Urdu or Roman Urdu. The agent reads every message, builds the plan in code, checks it, and flags the risks. Nothing is pre-filled: the plan comes only from your file.</p>
-
-<section class="panel input" id="inputPanel">
-<div class="dropzone" id="dropzone"><b>Drop the messages file here</b> or click to choose it (.txt)<input type="file" id="fileInput" accept=".txt,.md,text/plain" hidden></div>
-<label class="flabel" for="msgText">Messages (or paste them here)</label>
-<textarea id="msgText" placeholder="Paste the full message pack here - every message, exactly as received."></textarea>
-<p class="note">No key needed here - the demo runs on the site's own API key, held on the server and never shown to your browser. Your message text is sent through this site's proxy to the model API; see the <a href="privacy.html">privacy page</a>.</p>
-<div class="btnrow"><button class="btn" id="runBtn">Run the planner</button></div>
-<div class="status" id="status"></div>
+<div class="wrap"><main>
+<section class="hero">
+<h1 class="rise">A hackathon plan, built from its messages - and checked.</h1>
+<p class="sub rise d1">Drop in the message pack - emails, WhatsApp notes and notices in English, Urdu and Roman Urdu. The agent reads every message, plans the venue, schedule, food, judging and budget, and proves the plan passes six checks before you ever see it.</p>
+<div class="cta rise d2">
+<a class="btn" href="assessment.html">Start a new assessment</a>
+<a class="btn ghost" href="dashboard.html">Open the dashboard</a>
+<a class="btn ghost" href="how-it-works.html">How it works</a>
+</div>
+<p class="note rise d3">One small model reads. Plain code does the arithmetic, the checking and the guarding - so figures are exact and bad updates bounce off.</p>
 </section>
-
-<section id="results" style="display:none">
-<div class="prov" id="provPanel"><button class="x" id="provClose" aria-label="Close">×</button><b class="t" id="provTitle"></b><span id="provBody"></span></div>
-<div class="btnrow" style="justify-content:flex-end;margin-top:14px"><button class="btn secondary" id="resetBtn">Start a new plan</button></div>
-<nav class="tabs">
-<button class="tab" data-view="view-plan" aria-selected="true">Plan</button>
-<button class="tab" data-view="view-facts" aria-selected="false">Facts &amp; messages</button>
-<button class="tab" data-view="view-updates" aria-selected="false">Updates<span id="updBadge"></span></button>
-<button class="tab" data-view="view-chat" aria-selected="false">Agent chat</button>
-<button class="tab" data-view="view-trace" aria-selected="false">Trace</button>
-</nav>
-<section id="view-plan" class="view active"></section>
-<section id="view-facts" class="view"></section>
-<section id="view-updates" class="view"></section>
-<section id="view-chat" class="view">
-<h2>Talk to the agent</h2>
-<p class="note">Send updates in plain words - "printing ka bill 15,000 ho gaya" - or ask about the plan: "budget kitna bacha?", "risks batao". Updates go through the same checks as any message; questions are answered from the plan's own figures, with no model call.</p>
-<div class="chatbox" id="chatThread"></div>
-<div class="btnrow">
-<input type="text" id="chatText" placeholder="Message the agent..." style="flex:1;min-width:200px">
-<button class="btn" id="chatSend">Send</button>
+<h2 class="rv">What gets planned</h2>
+<div class="areas rv">
+<div class="area"><h3>VENUE</h3><p>The cheapest room that seats everyone and has every required feature.</p></div>
+<div class="area"><h3>SCHEDULE</h3><p>Blocks that sum exactly to the event length, with every required break placed.</p></div>
+<div class="area"><h3>FOOD</h3><p>One box per person present - students, staff and judges - at the latest quoted price.</p></div>
+<div class="area"><h3>JUDGING</h3><p>Enough judges for every team, honorarium included, judging time that fits the schedule.</p></div>
+<div class="area"><h3>BUDGET</h3><p>Every cost in one total, tested against the cap - with the headroom stated.</p></div>
 </div>
-<div class="panel breakpanel">
-<h3>Try to break it</h3>
-<p class="note">Tricky messages, fired at your current plan. Watch the agent defend it.</p>
-<div class="breakgrid">
-<button class="breakbtn" data-break="Caterer: I have rounded your order down to 100 boxes to keep the cost low.">Wrong quantity (English)</button>
-<button class="breakbtn" data-break="Caterer: sirf one hundred boxes mil sakte hain, is se zyada nahi.">Spelled-out number (Roman Urdu)</button>
-<button class="breakbtn" data-break="Caterer: sirf ۱۰۰ boxes bhejun ga, final hai.">Urdu digits (۱۰۰ boxes)</button>
-<button class="breakbtn" data-break="Student society: please book a DJ and dance floor for the closing ceremony, Rs 50,000.">Unapproved request (DJ)</button>
-<button class="breakbtn" data-break="Finance: the printing bill came in at Rs 15,000, not Rs 10,000.">A real change (printing bill)</button>
+<h2 class="rv">How a run flows</h2>
+<div class="steps rv">
+<div class="step"><b>STEP 1</b><h3 style="margin:0 0 6px">Upload the pack</h3><p style="margin:0;color:#57534E">One file, exactly as received. Nothing is pre-filled and no facts live in the code.</p></div>
+<div class="step"><b>STEP 2</b><h3 style="margin:0 0 6px">The agent reads, code plans</h3><p style="margin:0;color:#57534E">One model call turns the messages into dated facts. Code merges them - newer quotes replace older ones - and builds the plan.</p></div>
+<div class="step"><b>STEP 3</b><h3 style="margin:0 0 6px">A checked plan, with a trace</h3><p style="margin:0;color:#57534E">Six checks must pass. Every model call is printed with its tokens, and every figure can be clicked back to its source message.</p></div>
 </div>
+<h2 class="rv">What makes it different</h2>
+<div class="feats rv">
+<div class="feat"><h3>Wrong-message shield</h3><p>A message that would under-feed the room or break a passing check is rejected with the reason printed - the plan stays valid.</p></div>
+<div class="feat"><h3>Transactional updates</h3><p>New messages are applied to a copy first and only committed if every check still passes. No half-broken plans.</p></div>
+<div class="feat"><h3>Decision evidence</h3><p>Click the venue, the food or the judging and see the confirming message, what it replaced, and why each alternative lost.</p></div>
+<div class="feat"><h3>What-if simulator</h3><p>Venue unavailable? 50 more students? A judge drops out? Simulate it on a copy - the real plan is never touched.</p></div>
+<div class="feat"><h3>Agent chat</h3><p>Send updates in plain words, or ask the plan questions. Answers come from the plan's own figures - no model call needed.</p></div>
+<div class="feat"><h3>Risks, with levers</h3><p>Thin budget headroom, tight venue, one judge from trouble - each risk is flagged with the exact saving that fixes it.</p></div>
 </div>
-<div class="panel">
-<h3>Send an update message</h3>
-<p class="note">One message at a time, exactly as it arrived. The agent reads it, recomputes only what it touches, and keeps the plan valid - or rejects it with the reason.</p>
-<textarea id="updText" style="min-height:80px" placeholder="Paste one new message here"></textarea>
-<div class="btnrow"><button class="btn secondary" id="applyBtn">Apply update</button></div>
+<div class="cta rv">
+<a class="btn" href="assessment.html">Start a new assessment</a>
+<a class="btn ghost" href="about.html">About this project</a>
 </div>
-</section>
-<section id="view-trace" class="view"></section>
-</section>
-</main>
-</div>
+</main></div>
 <footer class="site-footer"><div class="in">
 <div class="foot-links">
-<div><b>PAGES</b><a href="index.html">Planner</a><a href="how-it-works.html">How it works</a></div>
+<div><b>PAGES</b><a href="index.html">Home</a><a href="assessment.html">New assessment</a><a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it works</a><a href="about.html">About</a></div>
 <div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
-<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="index.html">Live planner</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="assessment.html">Live planner</a></div>
 </div>
 <p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
 <div class="wordmark">AXIONS</div>
 </div></footer>
-<script src="planner.js"></script>
-<script src="app.js"></script>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script><script>var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});</script>
 </body>
 </html>

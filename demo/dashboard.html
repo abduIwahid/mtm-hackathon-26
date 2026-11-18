@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard - AXIONS Hackathon Planner</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="in">
+<a class="brand" href="index.html"><span class="mark"></span>AXIONS
+<small>Hackathon Planner</small></a>
+<button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<nav class="mainnav" id="mainnav">
+<a href="index.html">Home</a>
+<a href="assessment.html">New assessment</a>
+<a href="dashboard.html" class="here">Dashboard</a>
+<a href="how-it-works.html">How it works</a>
+<a href="about.html">About</a>
+<a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div></header>
+<div class="wrap"><p class="crumbs"><a href="index.html">Home</a> &rsaquo; Dashboard</p><main>
+<h1>Dashboard</h1>
+<p class="sub">Your latest assessment at a glance - read from this browser's saved session. The full detail lives in the assessment.</p>
+<div id="dashEmpty" style="display:none">
+<div class="empty"><b>No assessment yet.</b><br>Run your first message pack and this page will show the plan, the checks, the risks and the run history.
+<div class="cta"><a class="btn" href="assessment.html">Start a new assessment</a></div></div>
+</div>
+<div id="dashMain" style="display:none">
+<div id="dashBanner"></div>
+<div class="cards" id="dashCards"></div>
+<h2>Risks and recommendations</h2>
+<div id="dashRisks"></div>
+<h2>Recent activity</h2>
+<ul id="dashHistory"></ul>
+<div class="cta">
+<a class="btn" href="assessment.html">Continue in the assessment</a>
+<a class="btn ghost" href="assessment.html">New message or update</a>
+</div>
+</div>
+<script src="planner.js"></script>
+<script>
+function fmt(n){if(n===null||n===undefined)return"-";return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+var raw=null; try{ raw=localStorage.getItem("axions-planner-v1"); }catch(e){}
+var d=null; try{ d=raw?JSON.parse(raw):null; }catch(e){}
+if(!d||!d.plan){ document.getElementById("dashEmpty").style.display="block"; }
+else{
+  document.getElementById("dashMain").style.display="block";
+  var p=d.plan, f=d.facts;
+  var passed=p.checks.filter(function(c){return c.ok}).length;
+  document.getElementById("dashBanner").innerHTML=
+    '<div class="banner '+(passed===p.checks.length?"":"warn")+'">'+
+    (passed===p.checks.length?"ALL CHECKS PASS":"SOME CHECKS FAIL")+
+    " - Total Rs "+fmt(p.budget_total)+" of Rs "+fmt(p.budget_cap)+
+    " - Rs "+fmt(p.budget_remaining)+" remaining - "+
+    d.calls+" model calls this session</div>";
+  document.getElementById("dashCards").innerHTML=
+    '<div class="card"><h3>VENUE</h3><p>'+(p.venue?p.venue.name:"-")+'</p><p class="mut">Seats '+(p.venue?p.venue.capacity:"-")+' - Rs '+fmt(p.venue?p.venue.price:0)+'</p></div>'+
+    '<div class="card"><h3>FOOD</h3><p>'+(p.food?p.food.name:"-")+'</p><p class="mut">'+p.people_to_feed+' people - Rs '+fmt(p.food_total)+'</p></div>'+
+    '<div class="card"><h3>JUDGING</h3><p>'+p.judges_used+' judges</p><p class="mut">'+p.judging_minutes+' minutes - Rs '+fmt(p.honorarium_total)+'</p></div>'+
+    '<div class="card"><h3>CHECKS</h3><p>'+passed+' of '+p.checks.length+' pass</p><p class="mut">'+(d.rejected?d.rejected.length:0)+' message(s) rejected</p></div>';
+  var recos=(typeof recommendations==="function")?recommendations(f,p):[];
+  document.getElementById("dashRisks").innerHTML= recos.length?
+    recos.map(function(r){return '<div class="reco '+(r.level==="RISK"?"risk":"")+'"><b>'+r.level+'</b> '+r.text+'</div>'}).join(""):
+    '<p class="note">No risks flagged.</p>';
+  var h=(d.history||[]).slice(-5).reverse();
+  document.getElementById("dashHistory").innerHTML= h.length?
+    h.map(function(x){return "<li><b>"+x.type+"</b> - "+x.detail+" <span class='mut'>(total after: Rs "+fmt(x.total_after)+")</span></li>"}).join(""):
+    '<li class="mut">No runs recorded yet.</li>';
+}
+</script>
+</main></div>
+<footer class="site-footer"><div class="in">
+<div class="foot-links">
+<div><b>PAGES</b><a href="index.html">Home</a><a href="assessment.html">New assessment</a><a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it works</a><a href="about.html">About</a></div>
+<div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="assessment.html">Live planner</a></div>
+</div>
+<p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
+<div class="wordmark">AXIONS</div>
+</div></footer>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script>
+</body>
+</html>
