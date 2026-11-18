@@ -71,12 +71,11 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 .stackwrap:hover .sc1{transform:translate(-118px,44px) rotate(-7deg)}
 .stackwrap:hover .sc2{transform:translate(118px,44px) rotate(7deg)}
 .stackwrap:hover .sc3{transform:translateY(-8px)}
-.act div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline;min-width:0}
-.act div span:first-of-type{min-width:0;overflow-wrap:break-word}
-.act div span:last-child{flex:none}
+.act>div>div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline;min-width:0}
 .act i{width:9px;height:9px;border-radius:50%;background:#0F766E;flex:none;position:relative;top:1px}
 .act i.warn{background:#F59E0B}.act i.bad{background:#B91C1C}
-.act span{color:#78716C;margin-left:auto;font-size:12.5px;white-space:nowrap}
+.act>div>div span:first-of-type{flex:1;min-width:0;overflow-wrap:break-word}
+.act>div>div span:last-of-type{flex:none;color:#78716C;font-size:12.5px;white-space:nowrap}
 @media (max-width:1100px){.dshell{grid-template-columns:1fr}
 .dside{width:auto}.dnav{display:flex;flex-wrap:wrap;gap:4px}
 .drow.r1,.drow.r2{grid-template-columns:1fr}}
@@ -262,7 +261,7 @@ else{
   var recos=(typeof recommendations==="function")?recommendations(f,p):[];
   if(recos.length){ document.getElementById("dashRisksBox").style.display="block";
     document.getElementById("dashRisks").innerHTML=recos.map(function(r){
-      return '<div class="reco '+(r.level==="RISK"?"risk":"")+'"><b>'+r.level+'</b> '+esc(r.text)+'</div>'}).join(""); }
+      return '<div class="reco '+(r[0]==="risk"?"risk":"")+'"><b>'+esc(String(r[0]).toUpperCase())+'</b> '+esc(r[1])+'</div>'}).join(""); }
 }
 </script>
 </body>
