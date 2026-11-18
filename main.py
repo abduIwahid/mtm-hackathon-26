@@ -758,13 +758,17 @@ def render_html(state, trace_text):
         % ("ok" if c["ok"] else "bad", "PASS" if c["ok"] else "FAIL",
            esc(c["name"]), esc(c["detail"]))
         for c in plan["checks"])
-    rej = ""
+    rej = ("<div class='rejbox'><h2>Rejected messages</h2>"
+           "<p class='note'>None - every message so far could be used "
+           "without breaking the plan.</p></div>")
     if state.get("rejected"):
         items = "".join(
             "<li><span dir='auto'>\"%s\"</span><br><b>Reason:</b> %s</li>"
             % (esc(r["message"][:300]), esc(r["reason"]))
             for r in state["rejected"])
         rej = ("<div class='rejbox'><h2>Rejected messages</h2>"
+               "<p class='note'>Messages that would have broken the "
+               "plan, kept out - with the reason for each.</p>"
                "<ul class='rej'>%s</ul></div>" % items)
     req = ""
     if facts["requests"]:
@@ -775,11 +779,11 @@ def render_html(state, trace_text):
     ledger_html = ""
     ledger_lines = fact_ledger_lines(state)
     if ledger_lines:
-        ledger_html = ("<h2>Fact ledger</h2><table>%s</table>" % "".join(
+        ledger_html = ("<h2>Fact ledger</h2><p class='note'>Every figure the plan uses, with the message it was read from.</p><table>%s</table>" % "".join(
             "<tr><td>%s</td></tr>" % esc(x) for x in ledger_lines))
     hist_html = ""
     if state.get("history"):
-        hist_html = ("<h2>Update history</h2><table>%s</table>" % "".join(
+        hist_html = ("<h2>Update history</h2><p class='note'>Every message that arrived after the first run, and what it did to the plan.</p><table>%s</table>" % "".join(
             "<tr><td class='t'>#%s</td><td>%s</td><td>%s</td>"
             "<td class='n'>%s</td></tr>"
             % (h["seq"], esc(h["type"]), esc(h["detail"]),
@@ -847,7 +851,14 @@ def render_html(state, trace_text):
 body{font-family:system-ui,Arial,sans-serif;background:#FAFAF9;color:#1C1917;
 margin:0;padding:24px;line-height:1.45}
 .wrap{max-width:880px;margin:0 auto}
-h1{font-size:26px;margin:0 0 4px} h2{font-size:18px;margin:22px 0 8px}
+h1{font-size:28px;margin:0 0 4px}
+h2{font-size:19px;margin:32px 0 8px;padding-bottom:6px;
+border-bottom:1px solid #E7E5E4}
+.note{color:#57534E;font-size:14px;margin:0 0 10px}
+::selection{background:#0F766E;color:#fff}
+summary{cursor:pointer;font-weight:600}
+.pbtn:focus-visible,summary:focus-visible{outline:2px solid #0F766E;
+outline-offset:2px}
 .sub{color:#57534E;margin-bottom:16px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .card{background:#fff;border:1px solid #E7E5E4;border-radius:10px;padding:14px}
@@ -869,7 +880,7 @@ justify-content:center;overflow:hidden;white-space:nowrap;min-width:0}
 .tllegend{font-size:12px;color:#57534E;margin-bottom:10px}
 .rejbox{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;
 padding:6px 16px 12px;margin-top:22px}
-.rejbox h2{color:#B91C1C;margin-top:10px}
+.rejbox h2{color:#B91C1C;margin-top:10px;border-bottom:0;padding-bottom:0}
 .pbtn{float:right;background:#1C1917;color:#fff;border:0;border-radius:8px;
 padding:9px 14px;font-size:14px;cursor:pointer}
 .chips{margin-top:8px}
@@ -899,24 +910,28 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 .pbtn{display:none} .marquee{display:none}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
+<header>
 <h1>Hackathon Plan - Team AXIONS</h1>
 <button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">%s students, %s teams, %s people to feed in total</div>
 %s
 %s
+</header>
+<main>
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p>%s</div>
-<div class="card"><h3>FOOD</h3><p>%s</p><p>%s boxes - Rs %s</p></div>
+<div class="card"><h3>FOOD</h3><p>%s</p><p>%s boxes - Rs %s</p><p class='capnote'>Rs %s per person</p></div>
 <div class="card"><h3>JUDGING</h3><p>%s judges (%s confirmed)</p><p>%s minutes - Rs %s</p></div>
 <div class="card"><h3>BUDGET</h3><p>Rs %s of Rs %s</p><p>Remaining: Rs %s</p>%s</div>
 </div>
 <h2>Schedule</h2>%s<table>%s</table>
 <h2>Budget detail</h2><table>%s
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs %s</b></td></tr></table>
-<h2>Checks</h2><ul>%s</ul>
+<h2>Checks</h2><p class='note'>Six deterministic checks, run in code after every build. The plan counts as valid only while all of them pass.</p><ul>%s</ul>
 %s%s%s%s
 <h2>Full trace</h2>%s<details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
-<div class="wordmark">AXIONS</div>
+</main>
+<footer><div class="wordmark">AXIONS</div></footer>
 </div></body></html>""" % (
         plan["students"], plan["teams"], plan["people_to_feed"], banner,
         marquee, esc(v.get("name") if v else "NOT FOUND"),
@@ -924,6 +939,7 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
         fmt(v.get("price")) if v else "-", chips,
         esc(f.get("name") if f else "NOT FOUND"), plan["people_to_feed"],
         fmt(plan["food_total"]),
+        fmt(f.get("price_per_head")) if f else "-",
         plan["judges_used"], plan["judges_confirmed"],
         plan["judging_minutes"], fmt(plan["honorarium_total"]),
         fmt(plan["budget_total"]), fmt(plan["budget_cap"]),

@@ -6,7 +6,14 @@
 body{font-family:system-ui,Arial,sans-serif;background:#FAFAF9;color:#1C1917;
 margin:0;padding:24px;line-height:1.45}
 .wrap{max-width:880px;margin:0 auto}
-h1{font-size:26px;margin:0 0 4px} h2{font-size:18px;margin:22px 0 8px}
+h1{font-size:28px;margin:0 0 4px}
+h2{font-size:19px;margin:32px 0 8px;padding-bottom:6px;
+border-bottom:1px solid #E7E5E4}
+.note{color:#57534E;font-size:14px;margin:0 0 10px}
+::selection{background:#0F766E;color:#fff}
+summary{cursor:pointer;font-weight:600}
+.pbtn:focus-visible,summary:focus-visible{outline:2px solid #0F766E;
+outline-offset:2px}
 .sub{color:#57534E;margin-bottom:16px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .card{background:#fff;border:1px solid #E7E5E4;border-radius:10px;padding:14px}
@@ -28,7 +35,7 @@ justify-content:center;overflow:hidden;white-space:nowrap;min-width:0}
 .tllegend{font-size:12px;color:#57534E;margin-bottom:10px}
 .rejbox{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;
 padding:6px 16px 12px;margin-top:22px}
-.rejbox h2{color:#B91C1C;margin-top:10px}
+.rejbox h2{color:#B91C1C;margin-top:10px;border-bottom:0;padding-bottom:0}
 .pbtn{float:right;background:#1C1917;color:#fff;border:0;border-radius:8px;
 padding:9px 14px;font-size:14px;cursor:pointer}
 .chips{margin-top:8px}
@@ -58,22 +65,25 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 .pbtn{display:none} .marquee{display:none}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
+<header>
 <h1>Hackathon Plan - Team AXIONS</h1>
 <button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">150 students, 50 teams, 177 people to feed in total</div>
 <div class='banner okb'>ALL CHECKS PASS &middot; Total Rs 552,400 of Rs 650,000 &middot; Rs 97,600 remaining</div>
 <div class='marquee'><div class='mtrack'><span>150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; </span><span>150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; </span></div></div>
+</header>
+<main>
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>Hall A</p><p>Seats 200 - Rs 120,000</p></div>
-<div class="card"><h3>FOOD</h3><p>Standard lunch box</p><p>177 boxes - Rs 212,400</p></div>
+<div class="card"><h3>FOOD</h3><p>Standard lunch box</p><p>177 boxes - Rs 212,400</p><p class='capnote'>Rs 1,200 per person</p></div>
 <div class="card"><h3>JUDGING</h3><p>17 judges (20 confirmed)</p><p>45 minutes - Rs 85,000</p></div>
 <div class="card"><h3>BUDGET</h3><p>Rs 552,400 of Rs 650,000</p><p>Remaining: Rs 97,600</p><div class='meter'><div style='width:85%'></div></div><p class='capnote'>85% of the budget used</p></div>
 </div>
 <h2>Schedule</h2><div class='tl'><div style='flex:15;background:#44403C'></div><div style='flex:75;background:#0F766E'>75 min</div><div style='flex:15;background:#B45309'></div><div style='flex:75;background:#0F766E'>75 min</div><div style='flex:45;background:#134E4A'>45 min</div><div style='flex:15;background:#44403C'></div></div><div class='tllegend'>Opening and team check-in (15 min) &middot; Hacking / building - part 1 (75 min) &middot; Prayer break (15 min) &middot; Hacking / building - part 2 (75 min) &middot; Judging (every team seen by a judge) (45 min) &middot; Closing and prize announcement (15 min)</div><table><tr><td class='t'>0-15</td><td>Opening and team check-in</td><td class='n'>15 min</td></tr><tr><td class='t'>15-90</td><td>Hacking / building - part 1</td><td class='n'>75 min</td></tr><tr><td class='t'>90-105</td><td>Prayer break</td><td class='n'>15 min</td></tr><tr><td class='t'>105-180</td><td>Hacking / building - part 2</td><td class='n'>75 min</td></tr><tr><td class='t'>180-225</td><td>Judging (every team seen by a judge)</td><td class='n'>45 min</td></tr><tr><td class='t'>225-240</td><td>Closing and prize announcement</td><td class='n'>15 min</td></tr></table>
 <h2>Budget detail</h2><table><tr><td>Venue - Hall A</td><td class='n'>Rs 120,000</td></tr><tr><td>Food - Standard lunch box x 177 people</td><td class='n'>Rs 212,400</td></tr><tr><td>Judge honorarium - 17 judges</td><td class='n'>Rs 85,000</td></tr><tr><td>Already committed - backup internet</td><td class='n'>Rs 20,000</td></tr><tr><td>Already committed - printing</td><td class='n'>Rs 15,000</td></tr><tr><td>Already committed - prizes</td><td class='n'>Rs 100,000</td></tr>
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs 552,400</b></td></tr></table>
-<h2>Checks</h2><ul><li><b class='ok'>PASS</b> Budget within cap - total Rs 552,400 of cap Rs 650,000</li><li><b class='ok'>PASS</b> Venue fits everyone - Hall A seats 200, 177 people present</li><li><b class='ok'>PASS</b> Enough food ordered - 177 boxes for 177 people</li><li><b class='ok'>PASS</b> Enough judges - 17 needed (50 teams, max 3 per judge), 20 confirmed</li><li><b class='ok'>PASS</b> Schedule valid - blocks sum to 240 of 240 minutes, all required breaks included</li><li><b class='ok'>PASS</b> All five areas covered - venue, schedule, food, judging, budget all planned</li></ul>
-<div class='rejbox'><h2>Rejected messages</h2><ul class='rej'><li><span dir='auto'>"Caterer: I have rounded your order down to 100 boxes to keep the cost low."</span><br><b>Reason:</b> the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</li></ul></div><h2>Requests noted (not approved - not in the plan)</h2><ul><li>Request DJ for closing, quote Rs 50,000.</li></ul><h2>Fact ledger</h2><table><tr><td>Venue option: Room D - seats 80, Rs 40,000 (message #1)</td></tr><tr><td>Venue option: Hall A - seats 200, Rs 120,000 (message #1)</td></tr><tr><td>Venue option: Hall B - seats 200, Rs 150,000 (message #1)</td></tr><tr><td>Venue option: Hall C - seats 300, Rs 220,000 (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,000 per head on 20 Oct (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,200 per head on 12 Nov (message #1)</td></tr><tr><td>Food: Basic lunch box - Rs 800 per head on 12 Nov (message #1)</td></tr><tr><td>Judging: 20 confirmed, Rs 5,000 each, 15 min per team, max 3 teams per judge</td></tr><tr><td>Committed cost: backup internet - Rs 20,000 on 10 Nov (message #1)</td></tr><tr><td>Committed cost: printing - Rs 15,000 on 18 Nov (message #1)</td></tr><tr><td>Committed cost: prizes - Rs 100,000 on 10 Nov (message #1)</td></tr><tr><td>Schedule requirement: prayer break - 15 min (message #1)</td></tr><tr><td>Constraint: Delivery free hai. (message #1)</td></tr><tr><td>Constraint: I may be 10 minutes late on the day. (message #1)</td></tr></table><h2>Update history</h2><table><tr><td class='t'>#1</td><td>Full run</td><td>message pack read; plan built</td><td class='n'>Rs 547,400</td></tr><tr><td class='t'>#2</td><td>Update accepted</td><td>recomputed areas: budget</td><td class='n'>Rs 552,400</td></tr><tr><td class='t'>#3</td><td>Update rejected</td><td>the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</td><td class='n'>Rs 552,400</td></tr></table>
+<h2>Checks</h2><p class='note'>Six deterministic checks, run in code after every build. The plan counts as valid only while all of them pass.</p><ul><li><b class='ok'>PASS</b> Budget within cap - total Rs 552,400 of cap Rs 650,000</li><li><b class='ok'>PASS</b> Venue fits everyone - Hall A seats 200, 177 people present</li><li><b class='ok'>PASS</b> Enough food ordered - 177 boxes for 177 people</li><li><b class='ok'>PASS</b> Enough judges - 17 needed (50 teams, max 3 per judge), 20 confirmed</li><li><b class='ok'>PASS</b> Schedule valid - blocks sum to 240 of 240 minutes, all required breaks included</li><li><b class='ok'>PASS</b> All five areas covered - venue, schedule, food, judging, budget all planned</li></ul>
+<div class='rejbox'><h2>Rejected messages</h2><p class='note'>Messages that would have broken the plan, kept out - with the reason for each.</p><ul class='rej'><li><span dir='auto'>"Caterer: I have rounded your order down to 100 boxes to keep the cost low."</span><br><b>Reason:</b> the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</li></ul></div><h2>Requests noted (not approved - not in the plan)</h2><ul><li>Request DJ for closing, quote Rs 50,000.</li></ul><h2>Fact ledger</h2><p class='note'>Every figure the plan uses, with the message it was read from.</p><table><tr><td>Venue option: Room D - seats 80, Rs 40,000 (message #1)</td></tr><tr><td>Venue option: Hall A - seats 200, Rs 120,000 (message #1)</td></tr><tr><td>Venue option: Hall B - seats 200, Rs 150,000 (message #1)</td></tr><tr><td>Venue option: Hall C - seats 300, Rs 220,000 (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,000 per head on 20 Oct (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,200 per head on 12 Nov (message #1)</td></tr><tr><td>Food: Basic lunch box - Rs 800 per head on 12 Nov (message #1)</td></tr><tr><td>Judging: 20 confirmed, Rs 5,000 each, 15 min per team, max 3 teams per judge</td></tr><tr><td>Committed cost: backup internet - Rs 20,000 on 10 Nov (message #1)</td></tr><tr><td>Committed cost: printing - Rs 15,000 on 18 Nov (message #1)</td></tr><tr><td>Committed cost: prizes - Rs 100,000 on 10 Nov (message #1)</td></tr><tr><td>Schedule requirement: prayer break - 15 min (message #1)</td></tr><tr><td>Constraint: Delivery free hai. (message #1)</td></tr><tr><td>Constraint: I may be 10 minutes late on the day. (message #1)</td></tr></table><h2>Update history</h2><p class='note'>Every message that arrived after the first run, and what it did to the plan.</p><table><tr><td class='t'>#1</td><td>Full run</td><td>message pack read; plan built</td><td class='n'>Rs 547,400</td></tr><tr><td class='t'>#2</td><td>Update accepted</td><td>recomputed areas: budget</td><td class='n'>Rs 552,400</td></tr><tr><td class='t'>#3</td><td>Update rejected</td><td>the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</td><td class='n'>Rs 552,400</td></tr></table>
 <h2>Full trace</h2><p class='sub'>Model calls so far: 4 &middot; Total tokens (as reported by the API): 5,200</p><details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>======================================================================
 TRACE - full run
 ======================================================================
@@ -265,5 +275,6 @@ Tokens this run: 1300
 TOTAL TOKENS (session): 5200
 
 </pre></details>
-<div class="wordmark">AXIONS</div>
+</main>
+<footer><div class="wordmark">AXIONS</div></footer>
 </div></body></html>
