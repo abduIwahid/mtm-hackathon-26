@@ -61,18 +61,38 @@ margin-top:44px}
 .pbtn .more{display:inline-block;max-width:0;overflow:hidden;
 white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 .pbtn:hover .more{max-width:180px}
-@media print{body{background:#fff;padding:0}details{display:none}
-.pbtn{display:none} .marquee{display:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.tab{border:1px solid #E7E5E4;background:#fff;color:#1C1917;
+border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;
+cursor:pointer;font-family:inherit}
+.tab[aria-selected='true']{background:#1C1917;color:#fff;
+border-color:#1C1917}
+.tab .cnt{background:#B91C1C;color:#fff;border-radius:999px;
+padding:1px 7px;font-size:12px;margin-left:6px}
+.view{display:none}
+.view.active{display:block}
+.tracebox{background:#fff;border:1px solid #E7E5E4;border-radius:10px;
+padding:12px;overflow-x:auto}
+@media print{body{background:#fff;padding:0}
+.pbtn{display:none} .marquee{display:none} .tabs{display:none}
+.view{display:block!important}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
 <header>
 <h1>Hackathon Plan - Team AXIONS</h1>
 <button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">150 students, 50 teams, 177 people to feed in total</div>
+</header>
+<nav class="tabs">
+<button class="tab" data-view="view-plan" aria-selected="true">Plan</button>
+<button class="tab" data-view="view-facts" aria-selected="false">Facts &amp; messages</button>
+<button class="tab" data-view="view-updates" aria-selected="false">Updates<span class='cnt'>1</span></button>
+<button class="tab" data-view="view-trace" aria-selected="false">Trace</button>
+</nav>
+<main>
+<section id="view-plan" class="view active">
 <div class='banner okb'>ALL CHECKS PASS &middot; Total Rs 552,400 of Rs 650,000 &middot; Rs 97,600 remaining</div>
 <div class='marquee'><div class='mtrack'><span>150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; </span><span>150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; 150 students &middot; 50 teams &middot; Hall A &middot; 177 people to feed &middot; Rs 552,400 of Rs 650,000 &middot; ALL CHECKS PASS &middot; </span></div></div>
-</header>
-<main>
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>Hall A</p><p>Seats 200 - Rs 120,000</p></div>
 <div class="card"><h3>FOOD</h3><p>Standard lunch box</p><p>177 boxes - Rs 212,400</p><p class='capnote'>Rs 1,200 per person</p></div>
@@ -83,8 +103,15 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 <h2>Budget detail</h2><table><tr><td>Venue - Hall A</td><td class='n'>Rs 120,000</td></tr><tr><td>Food - Standard lunch box x 177 people</td><td class='n'>Rs 212,400</td></tr><tr><td>Judge honorarium - 17 judges</td><td class='n'>Rs 85,000</td></tr><tr><td>Already committed - backup internet</td><td class='n'>Rs 20,000</td></tr><tr><td>Already committed - printing</td><td class='n'>Rs 15,000</td></tr><tr><td>Already committed - prizes</td><td class='n'>Rs 100,000</td></tr>
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs 552,400</b></td></tr></table>
 <h2>Checks</h2><p class='note'>Six deterministic checks, run in code after every build. The plan counts as valid only while all of them pass.</p><ul><li><b class='ok'>PASS</b> Budget within cap - total Rs 552,400 of cap Rs 650,000</li><li><b class='ok'>PASS</b> Venue fits everyone - Hall A seats 200, 177 people present</li><li><b class='ok'>PASS</b> Enough food ordered - 177 boxes for 177 people</li><li><b class='ok'>PASS</b> Enough judges - 17 needed (50 teams, max 3 per judge), 20 confirmed</li><li><b class='ok'>PASS</b> Schedule valid - blocks sum to 240 of 240 minutes, all required breaks included</li><li><b class='ok'>PASS</b> All five areas covered - venue, schedule, food, judging, budget all planned</li></ul>
-<div class='rejbox'><h2>Rejected messages</h2><p class='note'>Messages that would have broken the plan, kept out - with the reason for each.</p><ul class='rej'><li><span dir='auto'>"Caterer: I have rounded your order down to 100 boxes to keep the cost low."</span><br><b>Reason:</b> the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</li></ul></div><h2>Requests noted (not approved - not in the plan)</h2><ul><li>Request DJ for closing, quote Rs 50,000.</li></ul><h2>Fact ledger</h2><p class='note'>Every figure the plan uses, with the message it was read from.</p><table><tr><td>Venue option: Room D - seats 80, Rs 40,000 (message #1)</td></tr><tr><td>Venue option: Hall A - seats 200, Rs 120,000 (message #1)</td></tr><tr><td>Venue option: Hall B - seats 200, Rs 150,000 (message #1)</td></tr><tr><td>Venue option: Hall C - seats 300, Rs 220,000 (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,000 per head on 20 Oct (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,200 per head on 12 Nov (message #1)</td></tr><tr><td>Food: Basic lunch box - Rs 800 per head on 12 Nov (message #1)</td></tr><tr><td>Judging: 20 confirmed, Rs 5,000 each, 15 min per team, max 3 teams per judge</td></tr><tr><td>Committed cost: backup internet - Rs 20,000 on 10 Nov (message #1)</td></tr><tr><td>Committed cost: printing - Rs 15,000 on 18 Nov (message #1)</td></tr><tr><td>Committed cost: prizes - Rs 100,000 on 10 Nov (message #1)</td></tr><tr><td>Schedule requirement: prayer break - 15 min (message #1)</td></tr><tr><td>Constraint: Delivery free hai. (message #1)</td></tr><tr><td>Constraint: I may be 10 minutes late on the day. (message #1)</td></tr></table><h2>Update history</h2><p class='note'>Every message that arrived after the first run, and what it did to the plan.</p><table><tr><td class='t'>#1</td><td>Full run</td><td>message pack read; plan built</td><td class='n'>Rs 547,400</td></tr><tr><td class='t'>#2</td><td>Update accepted</td><td>recomputed areas: budget</td><td class='n'>Rs 552,400</td></tr><tr><td class='t'>#3</td><td>Update rejected</td><td>the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</td><td class='n'>Rs 552,400</td></tr></table>
-<h2>Full trace</h2><p class='sub'>Model calls so far: 4 &middot; Total tokens (as reported by the API): 5,200</p><details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>======================================================================
+</section>
+<section id="view-facts" class="view">
+<h2>Fact ledger</h2><p class='note'>Every figure the plan uses, with the message it was read from.</p><table><tr><td>Venue option: Room D - seats 80, Rs 40,000 (message #1)</td></tr><tr><td>Venue option: Hall A - seats 200, Rs 120,000 (message #1)</td></tr><tr><td>Venue option: Hall B - seats 200, Rs 150,000 (message #1)</td></tr><tr><td>Venue option: Hall C - seats 300, Rs 220,000 (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,000 per head on 20 Oct (message #1)</td></tr><tr><td>Food: Standard lunch box - Rs 1,200 per head on 12 Nov (message #1)</td></tr><tr><td>Food: Basic lunch box - Rs 800 per head on 12 Nov (message #1)</td></tr><tr><td>Judging: 20 confirmed, Rs 5,000 each, 15 min per team, max 3 teams per judge</td></tr><tr><td>Committed cost: backup internet - Rs 20,000 on 10 Nov (message #1)</td></tr><tr><td>Committed cost: printing - Rs 15,000 on 18 Nov (message #1)</td></tr><tr><td>Committed cost: prizes - Rs 100,000 on 10 Nov (message #1)</td></tr><tr><td>Schedule requirement: prayer break - 15 min (message #1)</td></tr><tr><td>Constraint: Delivery free hai. (message #1)</td></tr><tr><td>Constraint: I may be 10 minutes late on the day. (message #1)</td></tr></table><h2>Requests noted (not approved - not in the plan)</h2><ul><li>Request DJ for closing, quote Rs 50,000.</li></ul><h2>Other constraints</h2><p class='note'>Read from the messages and respected by the plan.</p><ul><li><span dir='auto'>Delivery free hai.</span></li><li><span dir='auto'>I may be 10 minutes late on the day.</span></li></ul>
+</section>
+<section id="view-updates" class="view">
+<h2>Update history</h2><p class='note'>Every message that arrived after the first run, and what it did to the plan.</p><table><tr><td class='t'>#1</td><td>Full run</td><td>message pack read; plan built</td><td class='n'>Rs 547,400</td></tr><tr><td class='t'>#2</td><td>Update accepted</td><td>recomputed areas: budget</td><td class='n'>Rs 552,400</td></tr><tr><td class='t'>#3</td><td>Update rejected</td><td>the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</td><td class='n'>Rs 552,400</td></tr></table><div class='rejbox'><h2>Rejected messages</h2><p class='note'>Messages that would have broken the plan, kept out - with the reason for each.</p><ul class='rej'><li><span dir='auto'>"Caterer: I have rounded your order down to 100 boxes to keep the cost low."</span><br><b>Reason:</b> the message sets the food quantity to 100 boxes, but 177 people must be fed - 77 people would get no food. The plan keeps 177 boxes.</li></ul></div>
+</section>
+<section id="view-trace" class="view">
+<h2>Full trace</h2><p class='sub'>Model calls so far: 4 &middot; Total tokens (as reported by the API): 5,200</p><pre class='tracebox'>======================================================================
 TRACE - full run
 ======================================================================
 [code] full run: reading the whole message pack
@@ -274,7 +301,22 @@ TOKENS: prompt=900 completion=400 total=1300 (as reported by the API)
 Tokens this run: 1300
 TOTAL TOKENS (session): 5200
 
-</pre></details>
+</pre>
+</section>
 </main>
 <footer><div class="wordmark">AXIONS</div></footer>
-</div></body></html>
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(function(b){
+b.addEventListener('click',function(){
+document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected','false')});
+document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
+b.setAttribute('aria-selected','true');
+document.getElementById(b.getAttribute('data-view')).classList.add('active');
+window.scrollTo(0,0);
+});
+});
+var h=window.location.hash.replace('#','');
+if(h){var t=document.querySelector('[data-view="'+h+'"]');if(t){t.click();}}
+</script>
+</body></html>

@@ -776,6 +776,16 @@ def render_html(state, trace_text):
                         for r in facts["requests"])
         req = ("<h2>Requests noted (not approved - not in the plan)</h2>"
                "<ul>%s</ul>" % items)
+    chip = ("<span class='cnt'>%d</span>" % len(state["rejected"])) \
+        if state.get("rejected") else ""
+    cons_html = ""
+    if facts["other_constraints"]:
+        cons_html = ("<h2>Other constraints</h2><p class='note'>Read "
+                     "from the messages and respected by the plan.</p>"
+                     "<ul>%s</ul>" % "".join(
+                         "<li><span dir='auto'>%s</span></li>"
+                         % esc(o.get("text", ""))
+                         for o in facts["other_constraints"]))
     ledger_html = ""
     ledger_lines = fact_ledger_lines(state)
     if ledger_lines:
@@ -906,18 +916,38 @@ margin-top:44px}
 .pbtn .more{display:inline-block;max-width:0;overflow:hidden;
 white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 .pbtn:hover .more{max-width:180px}
-@media print{body{background:#fff;padding:0}details{display:none}
-.pbtn{display:none} .marquee{display:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.tab{border:1px solid #E7E5E4;background:#fff;color:#1C1917;
+border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;
+cursor:pointer;font-family:inherit}
+.tab[aria-selected='true']{background:#1C1917;color:#fff;
+border-color:#1C1917}
+.tab .cnt{background:#B91C1C;color:#fff;border-radius:999px;
+padding:1px 7px;font-size:12px;margin-left:6px}
+.view{display:none}
+.view.active{display:block}
+.tracebox{background:#fff;border:1px solid #E7E5E4;border-radius:10px;
+padding:12px;overflow-x:auto}
+@media print{body{background:#fff;padding:0}
+.pbtn{display:none} .marquee{display:none} .tabs{display:none}
+.view{display:block!important}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
 <header>
 <h1>Hackathon Plan - Team AXIONS</h1>
 <button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">%s students, %s teams, %s people to feed in total</div>
-%s
-%s
 </header>
+<nav class="tabs">
+<button class="tab" data-view="view-plan" aria-selected="true">Plan</button>
+<button class="tab" data-view="view-facts" aria-selected="false">Facts &amp; messages</button>
+<button class="tab" data-view="view-updates" aria-selected="false">Updates%s</button>
+<button class="tab" data-view="view-trace" aria-selected="false">Trace</button>
+</nav>
 <main>
+<section id="view-plan" class="view active">
+%s
+%s
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p>%s</div>
 <div class="card"><h3>FOOD</h3><p>%s</p><p>%s boxes - Rs %s</p><p class='capnote'>Rs %s per person</p></div>
@@ -928,13 +958,35 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 <h2>Budget detail</h2><table>%s
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs %s</b></td></tr></table>
 <h2>Checks</h2><p class='note'>Six deterministic checks, run in code after every build. The plan counts as valid only while all of them pass.</p><ul>%s</ul>
-%s%s%s%s
-<h2>Full trace</h2>%s<details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
+</section>
+<section id="view-facts" class="view">
+%s%s%s
+</section>
+<section id="view-updates" class="view">
+%s%s
+</section>
+<section id="view-trace" class="view">
+<h2>Full trace</h2>%s<pre class='tracebox'>%s</pre>
+</section>
 </main>
 <footer><div class="wordmark">AXIONS</div></footer>
-</div></body></html>""" % (
-        plan["students"], plan["teams"], plan["people_to_feed"], banner,
-        marquee, esc(v.get("name") if v else "NOT FOUND"),
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(function(b){
+b.addEventListener('click',function(){
+document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected','false')});
+document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
+b.setAttribute('aria-selected','true');
+document.getElementById(b.getAttribute('data-view')).classList.add('active');
+window.scrollTo(0,0);
+});
+});
+var h=window.location.hash.replace('#','');
+if(h){var t=document.querySelector('[data-view="'+h+'"]');if(t){t.click();}}
+</script>
+</body></html>""" % (
+        plan["students"], plan["teams"], plan["people_to_feed"], chip,
+        banner, marquee, esc(v.get("name") if v else "NOT FOUND"),
         v.get("capacity") if v else "-",
         fmt(v.get("price")) if v else "-", chips,
         esc(f.get("name") if f else "NOT FOUND"), plan["people_to_feed"],
@@ -944,8 +996,9 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
         plan["judging_minutes"], fmt(plan["honorarium_total"]),
         fmt(plan["budget_total"]), fmt(plan["budget_cap"]),
         fmt(plan["budget_remaining"]), meter,
-        timeline, sched, rows, fmt(plan["budget_total"]), checks, rej, req,
-        ledger_html, hist_html, stats, esc(trace_text))
+        timeline, sched, rows, fmt(plan["budget_total"]), checks,
+        ledger_html, req, cons_html, hist_html, rej,
+        stats, esc(trace_text))
     with open(HTML_PATH, "w", encoding="utf-8") as fh:
         fh.write(html)
 
