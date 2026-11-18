@@ -798,6 +798,16 @@ def render_html(state, trace_text):
         pct = round(100.0 * plan["budget_total"] / plan["budget_cap"])
     meter = ("<div class='meter'><div style='width:%d%%'></div></div>"
              "<p class='capnote'>%d%% of the budget used</p>" % (pct, pct))
+    figures = ["%s students" % fmt(plan["students"]),
+               "%s teams" % fmt(plan["teams"]),
+               esc(v.get("name") if v else "-"),
+               "%s people to feed" % fmt(plan["people_to_feed"]),
+               "Rs %s of Rs %s" % (fmt(plan["budget_total"]),
+                                   fmt(plan["budget_cap"])),
+               "ALL CHECKS PASS" if all_ok else "CHECKS FAILING"]
+    band = (" &middot; ".join(figures) + " &middot; ") * 3
+    marquee = ("<div class='marquee'><div class='mtrack'>"
+               "<span>%s</span><span>%s</span></div></div>" % (band, band))
     stats = ("<p class='sub'>Model calls so far: %s &middot; "
              "Total tokens (as reported by the API): %s</p>"
              % (fmt(state["model_calls"]), fmt(state["total_tokens"])))
@@ -842,13 +852,29 @@ color:#44403C}
 overflow:hidden}
 .meter div{background:#0F766E;height:100%%}
 .capnote{font-size:13px;color:#57534E;margin-top:6px}
+.marquee{overflow:hidden;background:#1C1917;color:#FAFAF9;border-radius:10px;
+margin-bottom:16px}
+.mtrack{display:flex;width:max-content;animation:mq 26s linear infinite}
+.mtrack span{padding:9px 0;white-space:nowrap;font-weight:600;
+letter-spacing:.06em;font-size:13px}
+@keyframes mq{to{transform:translateX(-50%%)}}
+@media (prefers-reduced-motion: reduce){.mtrack{animation:none}}
+.wordmark{font-weight:900;font-size:clamp(64px,17vw,168px);line-height:.82;
+letter-spacing:-.02em;text-align:center;color:#E7E5E4;user-select:none;
+margin-top:44px}
+.pbtn{border-radius:999px;transition:background .25s ease}
+.pbtn:hover{background:#0F766E}
+.pbtn .more{display:inline-block;max-width:0;overflow:hidden;
+white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
+.pbtn:hover .more{max-width:180px}
 @media print{body{background:#fff;padding:0}details{display:none}
-.pbtn{display:none}
+.pbtn{display:none} .marquee{display:none}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
 <h1>Hackathon Plan - Team AXIONS</h1>
-<button class='pbtn' onclick='window.print()'>Print / save as PDF</button>
+<button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">%s students, %s teams, %s people to feed in total</div>
+%s
 %s
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p>%s</div>
@@ -862,9 +888,10 @@ overflow:hidden}
 <h2>Checks</h2><ul>%s</ul>
 %s%s
 <h2>Full trace</h2>%s<details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
+<div class="wordmark">AXIONS</div>
 </div></body></html>""" % (
         plan["students"], plan["teams"], plan["people_to_feed"], banner,
-        esc(v.get("name") if v else "NOT FOUND"),
+        marquee, esc(v.get("name") if v else "NOT FOUND"),
         v.get("capacity") if v else "-",
         fmt(v.get("price")) if v else "-", chips,
         esc(f.get("name") if f else "NOT FOUND"), plan["people_to_feed"],
