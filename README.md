@@ -1,30 +1,47 @@
 # MTM Hackathon '26 — Team AXIONS
 
-**Event:** MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah — Wednesday 18 November 2026, Study Hall, CUI Wah Campus.
+**Event:** MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah — Wednesday 18 November 2026.
 **Team:** AXIONS — GDG On Campus CUI Attock. Lead + presenter: Abdul Wahid.
-**Problem statement:** Revealed 10:00 AM on the day — this README is updated with the project name, one-liner and demo link as soon as the build starts.
 
-## Status
+## The task
 
-Scaffold is set up and ready before the reveal: design tokens, AI plumbing, UI states and the project brain are all in place, so the 3.5-hour build window (10:30 AM – 2:00 PM) goes entirely into the product.
+Build an agent system that reads a pack of messages (emails, WhatsApp texts, notices — English and Roman Urdu; some irrelevant, some out of date) and plans a 4-hour physical hackathon across five areas: **venue, schedule, food, judging, budget**. At judging, the system runs on an unseen pack with different numbers, wording and senders.
 
-## What is wired already
+## How it works
 
-- Next.js 15 + Tailwind shell, design tokens in `app/globals.css` (solid colours, one accent, no gradients)
-- `/api/ai` — AI fallback chain (Gemini → Groq) in `lib/ai.ts`, so a single provider outage cannot kill the demo
-- Loading / empty / error UI states in `components/States.tsx`
-- Optional Supabase client in `lib/supabase.ts` (null-safe — the app runs without it)
-- `brain/` — the living project brain: PRD, architecture, build plan, demo data, judge Q&A and submission notes, updated after every step
+```
+python3 main.py <messages.txt>
+```
 
-## Run locally
+One command for everything. The first run (no `run/state.json`) treats the file as the full message pack. Later runs treat the file as new message(s) and update the existing plan. No flags, no hints, no facts typed into the code.
 
-1. Copy `.env.example` to `.env.local` and fill in the keys.
-2. `npm install`
-3. `npm run dev`
+**Design — the model reads, the code decides:**
 
-## Deploy
+1. **Reading (model).** One extraction call turns the raw message text into structured facts (JSON): event numbers, venue options, food prices with dates, judging rules, committed costs, schedule requirements, requests, and directives (numbers a message tries to impose on the plan).
+2. **Fact base.** Facts are stored with their dates and arrival order. A later price from the same sender supersedes the earlier one; item names are matched flexibly so a correction ("printing bill Rs 15,000") replaces the original entry instead of double-counting.
+3. **Planning (plain code).** Teams, judges needed, people to feed, venue choice (cheapest that fits everyone and any stated requirement), food choice (standard offering first, cheaper tier only if the budget demands it), a schedule that sums exactly to the event length with every required break, and a full budget. Arithmetic is code, so figures are exact.
+4. **Validation (plain code).** Six checks: budget within cap, venue fits, enough food, enough judges, schedule valid, all areas covered. On an update, if a message would break a check that previously passed — or imposes a quantity below a hard requirement (e.g. 100 food boxes for 177 people) — the message is **rejected**, the plan stays valid, and the reason is printed in the trace and shown in the UI.
+5. **Trace.** Every model call is printed: number, model name, one area tag, full input, full output, and the token counts exactly as the API reports them, ending with the session total. Code steps are marked `[code]` and are never counted as model calls.
 
-Push to `main` → Vercel auto-deploys. Live URL is added here at freeze time (1:30 PM).
+**Model:** `openai/gpt-oss-20b` via Groq for every call — a small model, chosen for the small-model bonus, speed (full run ≈ 5 seconds against a 2-minute limit) and a lean token count. Updates use at most 2 model calls (limit: 5).
+
+## Run it
+
+1. Python 3 only — no packages to install (standard library only).
+2. Copy `.env.example` to `.env`, paste a Groq API key.
+3. `python3 main.py sample_pack.txt` — builds the plan from the sample pack.
+4. `python3 main.py practice_change.txt` — a budget update.
+5. `python3 main.py practice_wrong.txt` — the plausible-but-wrong message; watch it get rejected.
+6. Outputs land in `run/`: `plan.txt`, `trace.txt` (full session trace), `index.html` (the UI: plan, checks, trace, rejected messages). Delete `run/` to start fresh.
+
+## Files
+
+- `main.py` — the whole system (transport, extraction, fact base, planners, validator, trace, UI).
+- `sample_pack.txt` — the 8 sample messages from the brief.
+- `practice_change.txt`, `practice_wrong.txt` — the brief's two practice updates.
+- `RUNBOOK.md` — the step-by-step for the day (freeze, test run, submission).
+- `MEMBER_BRIEF.md` — how each member explains the system to the judges.
+- `brain/` — the living project brain.
 
 ## License
 
