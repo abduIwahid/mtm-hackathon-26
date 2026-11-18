@@ -1389,7 +1389,9 @@ def extract_with_retry(prompt, tag, trace):
         reply, usage = call_model(prompt, max_tokens=6000)
         trace.model_call(tag, prompt, reply, usage)
         obj = parse_json_reply(reply)
-        if obj is not None:
+        if isinstance(obj, list):
+            obj = next((x for x in obj if isinstance(x, dict)), None)
+        if isinstance(obj, dict):
             return obj
         trace.note("reply was not valid JSON; retrying the call")
     raise RuntimeError("Model did not return valid JSON twice in a row.")
@@ -1449,6 +1451,10 @@ def run_update(text):
     trace.model_call("reading", classify_prompt(text, plan_summary(old_plan)),
                      reply, usage)
     route = parse_json_reply(reply) or {}
+    if isinstance(route, list):
+        route = next((x for x in route if isinstance(x, dict)), {})
+    if not isinstance(route, dict):
+        route = {}
     kind = norm(route.get("kind")) or "fact"
     areas = [norm(a) for a in route.get("areas") or [] if norm(a) in AREAS]
     trace.code("classified as kind=%s, areas=%s (%s)"
