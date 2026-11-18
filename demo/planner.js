@@ -136,18 +136,35 @@ function emptyFacts() {
     judging: {judges_confirmed: null, honorarium_each: null,
       minutes_per_team: null, max_teams_per_judge: null},
     committed: {}, schedule_requirements: [], requests: [],
-    other_constraints: []};
+    other_constraints: [], decision_log: []};
 }
 function mergeExtraction(facts, ext, seq) {
   if (!ext) return [];
+  if (!facts.decision_log) facts.decision_log = [];
+  const dlog = (label, oldV, newV, src, date) => {
+    if (oldV !== null && oldV !== undefined &&
+        String(oldV) !== String(newV))
+      facts.decision_log.push({label: label, old: oldV, new: newV,
+        source: src || null, date: date || null, seq: seq});
+  };
   const ev = ext.event || {};
   for (const k of Object.keys(ev))
-    if (ev[k] !== null && ev[k] !== undefined && k in facts.event)
+    if (ev[k] !== null && ev[k] !== undefined && k in facts.event) {
+      dlog("Event - " + k, facts.event[k], ev[k], null, null);
       facts.event[k] = ev[k];
+    }
   for (let v of ext.venue_options || []) {
     if (!v.name) continue;
     v = Object.assign({}, v); v._seq = seq;
     const vkey = findKey(facts.venue_options.map(x => norm(x.name)), v.name);
+    const oldV = facts.venue_options.find(
+      x => norm(x.name) === (vkey || norm(v.name)));
+    if (oldV) {
+      dlog("Venue " + v.name + " - price", oldV.price, v.price,
+        v.source, v.date);
+      dlog("Venue " + v.name + " - seats", oldV.capacity, v.capacity,
+        v.source, v.date);
+    }
     facts.venue_options = facts.venue_options.filter(
       x => norm(x.name) !== (vkey || norm(v.name)));
     facts.venue_options.push(v);
@@ -164,11 +181,16 @@ function mergeExtraction(facts, ext, seq) {
   }
   const ju = ext.judging || {};
   for (const k of Object.keys(ju))
-    if (ju[k] !== null && ju[k] !== undefined && k in facts.judging)
+    if (ju[k] !== null && ju[k] !== undefined && k in facts.judging) {
+      dlog("Judging - " + k, facts.judging[k], ju[k], null, null);
       facts.judging[k] = ju[k];
+    }
   for (const c of ext.committed_costs || []) {
     if (c.amount === null || c.amount === undefined || !c.item) continue;
     const key = findKey(Object.keys(facts.committed), c.item) || norm(c.item);
+    if (facts.committed[key])
+      dlog("Committed - " + c.item, facts.committed[key].amount,
+        c.amount, c.source, c.date);
     facts.committed[key] = {item: c.item, amount: c.amount,
       source: c.source, date: c.date, _seq: seq};
   }

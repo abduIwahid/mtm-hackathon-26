@@ -12,7 +12,7 @@ let PROV = [];
 function newState() {
   return {facts: emptyFacts(), plan: null, rejected: [], history: [],
     calls: 0, tokens: {prompt: 0, completion: 0, total: 0},
-    trace: [], diffHtml: "", seq: 0};
+    trace: [], diffHtml: "", seq: 0, sims: []};
 }
 function setStatus(msg, isErr) {
   const el = $("#status");
@@ -343,14 +343,14 @@ function render() {
   const pct = p.budget_cap
     ? Math.round(100 * p.budget_total / p.budget_cap) : 0;
   const cards = "<div class='cards'>" +
-    "<div class='card'><h3>VENUE</h3><p>" + esc(v.name || "NOT FOUND") +
+    "<div class='card clickable' data-ev='venue'><h3>VENUE</h3><p>" + esc(v.name || "NOT FOUND") +
     "</p><p>Seats " + esc(v.capacity ?? "-") + " - Rs " + fmt(v.price) +
     "</p><div class='chips'>" + chips + "</div></div>" +
-    "<div class='card'><h3>FOOD</h3><p>" + esc(fd.name || "NOT FOUND") +
+    "<div class='card clickable' data-ev='food'><h3>FOOD</h3><p>" + esc(fd.name || "NOT FOUND") +
     "</p><p>" + p.people_to_feed + " boxes - Rs " + fmt(p.food_total) +
     "</p><p class='capnote'>Rs " + fmt(fd.price_per_head) +
     " per person</p></div>" +
-    "<div class='card'><h3>JUDGING</h3><p>" + p.judges_used + " judges (" +
+    "<div class='card clickable' data-ev='judging'><h3>JUDGING</h3><p>" + p.judges_used + " judges (" +
     p.judges_confirmed + " confirmed)</p><p>" + p.judging_minutes +
     " minutes - Rs " + fmt(p.honorarium_total) + "</p></div>" +
     "<div class='card clickable' " +
@@ -405,7 +405,7 @@ function render() {
     fmt(p.budget_total) + "</b></td></tr></table>" +
     "<h2>Checks</h2><p class='note'>Six deterministic checks, run in " +
     "code after every build. The plan counts as valid only while all " +
-    "of them pass.</p>" + checks + recoHtml();
+    "of them pass.</p>" + checks + recoHtml() + simHtml();
   /* facts view */
   const led = [];
   const ev = f.event;
@@ -438,6 +438,15 @@ function render() {
     "the plan uses, with the message it was read from. Click a row " +
     "for the detail.</p><table><tr><th>Fact</th><th>Value</th>" +
     "<th>Source</th></tr>" + ledRows + "</table>";
+  const dlog = f.decision_log || [];
+  if (dlog.length)
+    factsHtml += "<h2>Decision history</h2><p class='note'>Values " +
+      "replaced as newer messages arrived - what changed, and where " +
+      "the change came from.</p><ul>" + dlog.map(d => "<li>" +
+      esc(d.label) + ": " + esc(d.old) + " \u2192 " + esc(d.new) +
+      (d.source ? " (message #" + d.source +
+        (d.date ? ", " + esc(d.date) : "") + ")" : "") +
+      "</li>").join("") + "</ul>";
   if (f.requests.length)
     factsHtml += "<h2>Requests noted (not in the plan)</h2><ul>" +
       f.requests.map(r => "<li>" + esc(r.summary) + "</li>").join("") +
@@ -490,6 +499,159 @@ function recoHtml() {
       esc(r[1]) + "</li>").join("") + "</ul>";
 }
 
+/* ---------------- what-if simulator ----------------
+   Simulate only: every scenario runs the planner on a CLONE of the
+   fact base. The real plan, history and trace are never touched. */
+const SIMS = {
+  "venue-out": "The chosen venue becomes unavailable",
+  "food-cheaper": "Switch to the cheapest food tier",
+  "food-upgrade": "Switch to the premium food tier",
+  "students-50": "50 more students register",
+  "cap-20": "The budget cap is cut by 20%",
+  "judge-drop": "One judge drops out"};
+function runSim(id) {
+  if (!S || !S.plan) return;
+  const c = structuredClone(S.facts);
+  const p0 = S.plan;
+  if (id === "venue-out" && p0.venue)
+    c.venue_options = c.venue_options.filter(
+      x => norm(x.name) !== norm(p0.venue.name));
+  if (id === "food-cheaper" || id === "food-upgrade") {
+    const cur = currentFoodOptions(c);
+    if (cur.length) {
+      const sorted = [...cur].sort((a, b) =>
+        (a.price_per_head || 0) - (b.price_per_head || 0));
+      const target = id === "food-cheaper"
+        ? sorted[0] : sorted[sorted.length - 1];
+      const keep = norm(target.name);
+      c.food_options = c.food_options.filter(x =>
+        norm(x.name) === keep || findKey([keep], x.name) === keep);
+    }
+  }
+  if (id === "students-50")
+    c.event.students = (c.event.students || 0) + 50;
+  if (id === "cap-20" && c.event.budget_cap)
+    c.event.budget_cap = Math.round(c.event.budget_cap * 0.8);
+  if (id === "judge-drop")
+    c.judging.judges_confirmed = Math.max(0,
+      (c.judging.judges_confirmed || 0) - 1);
+  const p2 = buildPlan(c);
+  const lines = [];
+  lines.push("Venue: " + (p0.venue ? p0.venue.name : "-") + " \u2192 " +
+    (p2.venue ? p2.venue.name + " (Rs " + fmt(p2.venue.price) + ")"
+              : "NO VENUE FITS"));
+  if ((p2.food || {}).name !== (p0.food || {}).name)
+    lines.push("Food: " + (p0.food ? p0.food.name : "-") + " \u2192 " +
+      (p2.food ? p2.food.name : "-"));
+  lines.push("Total: Rs " + fmt(p0.budget_total) + " \u2192 Rs " +
+    fmt(p2.budget_total) + " (" +
+    (p2.budget_total >= p0.budget_total ? "+" : "-") + "Rs " +
+    fmt(Math.abs(p2.budget_total - p0.budget_total)) + ")");
+  lines.push("Remaining: Rs " + fmt(p0.budget_remaining) + " \u2192 Rs " +
+    fmt(p2.budget_remaining));
+  if (p2.people_to_feed !== p0.people_to_feed ||
+      p2.judges_used !== p0.judges_used)
+    lines.push("People to feed: " + p0.people_to_feed + " \u2192 " +
+      p2.people_to_feed + " · judges used: " + p0.judges_used +
+      " \u2192 " + p2.judges_used + " · judging: " +
+      p0.judging_minutes + " \u2192 " + p2.judging_minutes + " min");
+  const failing = p2.checks.filter(x => !x.ok);
+  S.sims.unshift({name: SIMS[id] || id, lines: lines,
+    feasible: failing.length === 0,
+    failing: failing.map(x => x.name)});
+  note("simulation run (" + (SIMS[id] || id) +
+    ") - real plan unchanged");
+  render();
+}
+function simHtml() {
+  let h = "<h2>What-if simulator</h2><p class='note'>Simulate only - " +
+    "experiments run on a copy of the facts and never overwrite the " +
+    "real plan.</p><div class='simgrid'>" +
+    Object.keys(SIMS).map(k => "<button class='simbtn' data-sim='" +
+      k + "'>" + SIMS[k] + "</button>").join("") + "</div>";
+  for (const s of S.sims || [])
+    h += "<div class='simcard" + (s.feasible ? "" : " no") + "'>" +
+      "<span class='simtag'>SIMULATION - REAL PLAN UNCHANGED</span>" +
+      "<h3>" + esc(s.name) + "</h3>" + s.lines.map(l => "<p>" +
+      esc(l) + "</p>").join("") + "<p class='feas " +
+      (s.feasible ? "ok" : "no") + "'>" + (s.feasible
+        ? "FEASIBLE - all 6 checks still pass"
+        : "NOT FEASIBLE - failing: " + s.failing.join(", ")) +
+      "</p></div>";
+  return h;
+}
+
+/* ---------------- decision evidence ---------------- */
+function decisionEvidence(kind) {
+  const p = S.plan, f = S.facts;
+  const dl = (f.decision_log || []);
+  if (kind === "venue" && p.venue) {
+    const v = p.venue, L = [];
+    L.push("Quoted in " + srcText(v) + " - Rs " + fmt(v.price) +
+      ", seats " + v.capacity + (v.features && v.features.length
+        ? ", features: " + v.features.join(", ") : "") + ".");
+    for (const d of dl)
+      if (d.label.startsWith("Venue " + v.name))
+        L.push("Changed while reading: " + d.label.split(" - ")[1] +
+          " " + d.old + " \u2192 " + d.new + " (" + srcText(d) + ").");
+    L.push("Why chosen: the cheapest venue that seats " +
+      p.people_to_feed + " people and has every required feature.");
+    for (const o of f.venue_options) {
+      if (norm(o.name) === norm(v.name)) continue;
+      if ((o.capacity || 0) < p.people_to_feed)
+        L.push(o.name + ": rejected - seats " + o.capacity +
+          ", fewer than the " + p.people_to_feed + " people present.");
+      else
+        L.push(o.name + ": also fits - Rs " +
+          fmt((o.price || 0) - (v.price || 0)) +
+          " more, so it was not chosen.");
+    }
+    return {t: "Evidence - venue: " + v.name, lines: L};
+  }
+  if (kind === "food" && p.food) {
+    const fd = p.food, L = [];
+    L.push("Current price Rs " + fmt(fd.price_per_head) +
+      " per person, from " + srcText(fd) +
+      ". When quotes conflict, the latest dated one wins.");
+    for (const o of f.food_options)
+      if (norm(o.name) === norm(fd.name) &&
+          o.price_per_head !== fd.price_per_head)
+        L.push("Earlier quote: Rs " + fmt(o.price_per_head) +
+          " per person (" + (o.date || "undated") +
+          ") - replaced by the later quote above.");
+    L.push("Why chosen: tiers are tried from the standard tier " +
+      "down; the first combination that fits the cap wins. With " +
+      fd.name + " the total is Rs " + fmt(p.budget_total) +
+      " of Rs " + fmt(p.budget_cap) + ".");
+    for (const o of currentFoodOptions(f))
+      if (norm(o.name) !== norm(fd.name))
+        L.push("Alternative: " + o.name + " at Rs " +
+          fmt(o.price_per_head) + " per person would change the " +
+          "total by Rs " + fmt(((o.price_per_head || 0) -
+            (fd.price_per_head || 0)) * p.people_to_feed) + ".");
+    return {t: "Evidence - food: " + fd.name, lines: L};
+  }
+  if (kind === "judging") {
+    const L = [];
+    L.push(p.judges_needed + " judges needed = " + p.teams +
+      " teams \u00f7 max " + f.judging.max_teams_per_judge +
+      " per judge, rounded up. " + p.judges_confirmed +
+      " confirmed, so " + p.judges_used + " are used.");
+    L.push("Honorarium: " + p.judges_used + " \u00d7 Rs " +
+      fmt(f.judging.honorarium_each) + " = Rs " +
+      fmt(p.honorarium_total) + ".");
+    L.push("Judging time: " + Math.ceil(p.teams / p.judges_used) +
+      " rounds \u00d7 " + f.judging.minutes_per_team + " minutes = " +
+      p.judging_minutes + " minutes in the schedule.");
+    for (const d of dl)
+      if (d.label.startsWith("Judging"))
+        L.push("Changed while reading: " + d.label + " " + d.old +
+          " \u2192 " + d.new + ".");
+    return {t: "Evidence - judging", lines: L};
+  }
+  return null;
+}
+
 /* ---------------- wiring ---------------- */
 function activateTab(name) {
   document.querySelectorAll(".tab").forEach(x =>
@@ -515,6 +677,20 @@ document.addEventListener("click", e => {
   if (e.target.closest("#applyBtn")) {
     const t = $("#updText").value.trim();
     if (t) runUpdate(t);
+    return;
+  }
+  const sim = e.target.closest("[data-sim]");
+  if (sim) { runSim(sim.getAttribute("data-sim")); return; }
+  const evEl = e.target.closest("[data-ev]");
+  if (evEl) {
+    const d = decisionEvidence(evEl.getAttribute("data-ev"));
+    if (d) {
+      $("#provTitle").textContent = d.t;
+      $("#provBody").innerHTML = d.lines.map(esc).join("<br>");
+      $("#provPanel").classList.add("show");
+      $("#provPanel").scrollIntoView({behavior: "smooth",
+        block: "nearest"});
+    }
     return;
   }
   const pv = e.target.closest("[data-prov]");
@@ -583,7 +759,7 @@ function persist() {
     localStorage.setItem(LS_KEY, JSON.stringify({
       facts: S.facts, plan: S.plan, rejected: S.rejected,
       history: S.history, calls: S.calls, tokens: S.tokens,
-      trace: S.trace, seq: S.seq,
+      trace: S.trace, seq: S.seq, sims: S.sims || [],
       chat: $("#chatThread") ? $("#chatThread").innerHTML : ""}));
   } catch (e) { /* storage full or blocked - session just won't persist */ }
 }
@@ -596,7 +772,8 @@ function restore() {
     S = {facts: d.facts, plan: d.plan, rejected: d.rejected || [],
       history: d.history || [], calls: d.calls || 0,
       tokens: d.tokens || {prompt: 0, completion: 0, total: 0},
-      trace: d.trace || [], diffHtml: "", seq: d.seq || 1};
+      trace: d.trace || [], diffHtml: "", seq: d.seq || 1,
+      sims: d.sims || []};
     render();
     if (d.chat) $("#chatThread").innerHTML = d.chat;
     setStatus("Previous session restored - the agent remembers the " +
