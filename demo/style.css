@@ -43,14 +43,14 @@ color:#78716C}
 /* ---------- footer ---------- */
 .site-footer{border-top:1px solid #E7E5E4;margin-top:44px;background:#fff}
 .site-footer .in{max-width:1400px;margin:0 auto;padding:26px clamp(16px,4vw,44px) 30px}
-.foot-links{display:flex;gap:clamp(18px,4vw,48px);flex-wrap:wrap;font-size:14px}
+.foot-links{display:flex;gap:clamp(18px,4vw,48px);flex-wrap:wrap;font-size:14px;justify-content:space-between}
 .foot-links div b{display:block;font-size:12px;letter-spacing:.08em;
 color:#0F766E;margin-bottom:6px}
 .foot-links a{display:block;color:#44403C;text-decoration:none;
 padding:2px 0}
 .foot-links a:hover{color:#0F766E}
 .foot-note{color:#78716C;font-size:13px;margin-top:18px}
-.wordmark{font-size:clamp(38px,9vw,120px);font-weight:800;color:#F5F5F4;
+.wordmark{font-size:clamp(38px,9vw,120px);font-weight:800;color:#DCD7D0;
 letter-spacing:.02em;line-height:1;text-align:center;margin-top:10px;
 user-select:none}
 
@@ -292,3 +292,5 @@ svg{max-width:100%}
 .wrap{min-width:0}
 .tabs{flex-wrap:wrap}
 .cards{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+
+html[data-theme="dark"] .wordmark{color:#2A2725}
