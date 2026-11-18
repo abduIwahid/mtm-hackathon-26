@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="stylesheet" href="style.css">
+<style>
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{to{opacity:1}}
+@keyframes sweep{from{stroke-dashoffset:188.5}to{stroke-dashoffset:var(--off)}}
+@keyframes pop{from{opacity:0;transform:scale(.92) rotate(-6deg)}to{opacity:1;transform:none}}
+.dshell{display:flex;gap:18px;align-items:stretch}
+.dside{width:230px;flex:none;background:#0B3B39;color:#E7E5E4;border-radius:20px;
+padding:24px 18px;display:flex;flex-direction:column;animation:rise .6s ease both}
+.dlogo{display:flex;gap:9px;align-items:center;font-weight:800;font-size:19px;margin-bottom:26px}
+.dlogo .mark{width:15px;height:15px;background:#14B8A6;border-radius:4px}
+.dnav a{display:block;color:#C9E8E4;text-decoration:none;padding:11px 12px;
+border-radius:10px;font-size:15px;margin:2px 0;transition:all .25s ease}
+.dnav a.on{background:#0F766E;color:#fff;font-weight:700}
+.dnav a:hover{background:#115E59;transform:translateX(5px)}
+.dcard{background:#0F766E;border-radius:14px;padding:14px;margin-top:22px;transition:transform .3s ease}
+.dcard:hover{transform:translateY(-3px)}
+.dcard b{font-size:14px}.dcard p{margin:4px 0 0;font-size:12.5px;opacity:.85}
+.dnote{margin-top:auto;background:#08302E;border-radius:12px;padding:12px 14px;font-size:13.5px}
+.dmain{flex:1;display:flex;flex-direction:column;gap:18px;min-width:0}
+.drow{display:flex;gap:18px}
+.dbox{background:#fff;border:1px solid #E7E5E4;border-radius:18px;padding:20px 22px;
+box-shadow:0 4px 18px rgba(28,25,23,.06);transition:transform .3s ease,box-shadow .3s ease;
+animation:rise .6s ease both}
+.dbox:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(28,25,23,.13)}
+.dbox h3{margin:0 0 4px;font-size:16.5px}
+.dbox .sub{color:#78716C;font-size:13px;margin:0 0 10px}
+.welcome{width:290px;flex:none}
+.avatar{width:56px;height:56px;border-radius:50%;background:#0F766E;color:#fff;
+display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
+.welcome h2{margin:10px 0 2px;font-size:21px}
+.welcome p{margin:0;color:#78716C;font-size:12.5px;letter-spacing:.05em}
+.chips{display:flex;gap:14px}
+.chip{flex:1;border-radius:14px;padding:14px 16px;color:#fff;
+transition:transform .3s ease,box-shadow .3s ease}
+.chip:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 14px 28px rgba(28,25,23,.18)}
+.chip small{display:block;font-size:12.5px;opacity:.9}
+.chip b{font-size:27px}
+.c1{background:#F59E0B}.c2{background:#0F766E}.c3{background:#44403C}
+.flowline{stroke-dasharray:100;stroke-dashoffset:100;animation:draw 1.8s ease .4s forwards}
+.flowarea{opacity:0;animation:fadein 1.2s ease 1s forwards}
+.dotp{opacity:0;animation:fadein .5s ease 1.6s forwards}
+.donutwrap{animation:pop .8s ease .5s both}
+.seg{transition:stroke-width .3s ease}.seg:hover{stroke-width:37}
+.lg{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:7px 0}
+.lg span{width:11px;height:11px;border-radius:3px;display:inline-block}
+.lg b{margin-left:auto}
+.rings{display:flex;flex-direction:column;gap:10px}
+.ring{display:flex;align-items:center;gap:10px}
+.ring .arc{animation:sweep 1.4s ease .6s both}
+.ring b{display:block;font-size:14.5px}.ring span{color:#78716C;font-size:12.5px}
+.stackwrap{position:relative;height:196px;margin-top:8px}
+.scard{position:absolute;left:50%;width:250px;margin-left:-125px;border-radius:14px;
+padding:14px 16px;color:#fff;box-shadow:0 14px 30px rgba(28,25,23,.22);
+transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
+.scard small{display:block;font-size:11.5px;letter-spacing:.07em;opacity:.85}
+.scard b{font-size:19px}.scard p{margin:3px 0 0;font-size:12.5px;opacity:.9}
+.sc1{background:#44403C;transform:translateY(52px) rotate(3deg);z-index:1}
+.sc2{background:#F59E0B;transform:translateY(26px) rotate(-2deg);z-index:2}
+.sc3{background:#0F766E;transform:translateY(0);z-index:3}
+.stackwrap:hover .sc1{transform:translate(-118px,44px) rotate(-7deg)}
+.stackwrap:hover .sc2{transform:translate(118px,44px) rotate(7deg)}
+.stackwrap:hover .sc3{transform:translateY(-8px)}
+.act div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline}
+.act i{width:9px;height:9px;border-radius:50%;background:#0F766E;flex:none;position:relative;top:1px}
+.act i.warn{background:#F59E0B}.act i.bad{background:#B91C1C}
+.act span{color:#78716C;margin-left:auto;font-size:12.5px;white-space:nowrap}
+@media (max-width:900px){.dshell{flex-direction:column}.dside{width:auto}
+.drow{flex-direction:column}.welcome{width:auto}.stackwrap{height:210px}}
+html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -18,57 +89,63 @@
 <a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
 </nav>
 </div></header>
-<div class="wrap"><p class="crumbs"><a href="index.html">Home</a> &rsaquo; Dashboard</p><main>
-<h1>Dashboard</h1>
-<p class="sub">Your latest assessment at a glance - read from this browser's saved session. The full detail lives in the assessment.</p>
+<div class="wrap"><p class="crumbs"><a href="index.html">Home</a> &rsaquo; Dashboard</p><main><h1>Dashboard</h1><p class="sub">Your latest assessment, visual first - charts, layers and rings, read from this browser's saved session.</p><div class="dshell" id="dashShell" style="display:none">
+<aside class="dside">
+<div class="dlogo"><span class="mark"></span>AXIONS</div>
+<nav class="dnav">
+<a class="on" href="dashboard.html">Dashboard</a>
+<a href="assessment.html">New assessment</a>
+<a href="assessment.html#view-chat">Agent chat</a>
+<a href="assessment.html#view-updates">Updates</a>
+<a href="assessment.html#view-trace">Trace</a>
+<a href="how-it-works.html">How it works</a>
+<a href="about.html">About</a>
+</nav>
+<div class="dcard"><b>Saved session</b>
+<p>This dashboard reads the plan saved in this browser. Run an assessment and it appears here.</p></div>
+<div class="dnote">The model reads. Code decides.</div>
+</aside>
+<div class="dmain">
+<div class="drow">
+<div class="dbox welcome" style="animation-delay:.05s"><div class="avatar">AX</div>
+<h2>Team AXIONS</h2><p>WELCOME TO DASHBOARD</p>
+<p style="margin-top:12px">MTM HACKATHON '26<br><span id="dashWhen">LATEST SAVED PLAN</span></p></div>
+<div class="dbox" style="flex:1;animation-delay:.12s"><h3 id="dashTitle">Current plan</h3>
+<div class="sub" id="dashVerdict"></div>
+<div class="chips">
+<div class="chip c1"><small>Total budget</small><b>Rs <span class="count" id="cTotal">0</span></b></div>
+<div class="chip c2"><small>People to feed</small><b><span class="count" id="cPeople">0</span></b></div>
+<div class="chip c3"><small>Judges</small><b><span class="count" id="cJudges">0</span></b></div>
+</div></div>
+</div>
+<div class="drow">
+<div class="dbox" style="flex:1;animation-delay:.2s"><h3>Schedule flow</h3>
+<p class="sub">One smooth flow across the event - hover nothing, it just flows.</p>
+<div id="dashChart"></div></div>
+<div class="dbox" style="width:300px;flex:none;animation-delay:.28s"><h3>Budget composition</h3>
+<p class="sub">Where the money goes - hover a slice</p>
+<div class="donutwrap" style="display:flex;justify-content:center" id="dashDonut"></div>
+<div id="dashLegend"></div></div>
+</div>
+<div class="drow">
+<div class="dbox" style="width:330px;flex:none;animation-delay:.36s"><h3>Plan layers - stacked</h3>
+<p class="sub">The plan, layer by layer - hover to fan the stack</p>
+<div class="stackwrap" id="dashStack"></div></div>
+<div class="dbox" style="flex:1;animation-delay:.44s"><h3>Plan health</h3>
+<div class="rings" id="dashRings"></div></div>
+<div class="dbox act" style="width:330px;flex:none;animation-delay:.52s"><h3>Latest activity</h3>
+<div id="dashActivity"></div></div>
+</div>
+<div class="dbox" id="dashRisksBox" style="animation-delay:.6s;display:none"><h3>Risks and recommendations</h3>
+<div id="dashRisks"></div></div>
+<div class="cta"><a class="btn" href="assessment.html">Continue in the assessment</a>
+<a class="btn ghost" href="assessment.html">New message or update</a></div>
+</div>
+</div>
 <div id="dashEmpty" style="display:none">
-<div class="empty"><b>No assessment yet.</b><br>Run your first message pack and this page will show the plan, the checks, the risks and the run history.
+<div class="empty"><b>No assessment yet.</b><br>Run your first message pack and this page will show the plan as charts, layers and rings.
 <div class="cta"><a class="btn" href="assessment.html">Start a new assessment</a></div></div>
-</div>
-<div id="dashMain" style="display:none">
-<div id="dashBanner"></div>
-<div class="cards" id="dashCards"></div>
-<h2>Risks and recommendations</h2>
-<div id="dashRisks"></div>
-<h2>Recent activity</h2>
-<ul id="dashHistory"></ul>
-<div class="cta">
-<a class="btn" href="assessment.html">Continue in the assessment</a>
-<a class="btn ghost" href="assessment.html">New message or update</a>
-</div>
-</div>
-<script src="planner.js"></script>
-<script>
-function fmt(n){if(n===null||n===undefined)return"-";return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
-var raw=null; try{ raw=localStorage.getItem("axions-planner-v1"); }catch(e){}
-var d=null; try{ d=raw?JSON.parse(raw):null; }catch(e){}
-if(!d||!d.plan){ document.getElementById("dashEmpty").style.display="block"; }
-else{
-  document.getElementById("dashMain").style.display="block";
-  var p=d.plan, f=d.facts;
-  var passed=p.checks.filter(function(c){return c.ok}).length;
-  document.getElementById("dashBanner").innerHTML=
-    '<div class="banner '+(passed===p.checks.length?"":"warn")+'">'+
-    (passed===p.checks.length?"ALL CHECKS PASS":"SOME CHECKS FAIL")+
-    " - Total Rs "+fmt(p.budget_total)+" of Rs "+fmt(p.budget_cap)+
-    " - Rs "+fmt(p.budget_remaining)+" remaining - "+
-    d.calls+" model calls this session</div>";
-  document.getElementById("dashCards").innerHTML=
-    '<div class="card"><h3>VENUE</h3><p>'+(p.venue?p.venue.name:"-")+'</p><p class="mut">Seats '+(p.venue?p.venue.capacity:"-")+' - Rs '+fmt(p.venue?p.venue.price:0)+'</p></div>'+
-    '<div class="card"><h3>FOOD</h3><p>'+(p.food?p.food.name:"-")+'</p><p class="mut">'+p.people_to_feed+' people - Rs '+fmt(p.food_total)+'</p></div>'+
-    '<div class="card"><h3>JUDGING</h3><p>'+p.judges_used+' judges</p><p class="mut">'+p.judging_minutes+' minutes - Rs '+fmt(p.honorarium_total)+'</p></div>'+
-    '<div class="card"><h3>CHECKS</h3><p>'+passed+' of '+p.checks.length+' pass</p><p class="mut">'+(d.rejected?d.rejected.length:0)+' message(s) rejected</p></div>';
-  var recos=(typeof recommendations==="function")?recommendations(f,p):[];
-  document.getElementById("dashRisks").innerHTML= recos.length?
-    recos.map(function(r){return '<div class="reco '+(r.level==="RISK"?"risk":"")+'"><b>'+r.level+'</b> '+r.text+'</div>'}).join(""):
-    '<p class="note">No risks flagged.</p>';
-  var h=(d.history||[]).slice(-5).reverse();
-  document.getElementById("dashHistory").innerHTML= h.length?
-    h.map(function(x){return "<li><b>"+x.type+"</b> - "+x.detail+" <span class='mut'>(total after: Rs "+fmt(x.total_after)+")</span></li>"}).join(""):
-    '<li class="mut">No runs recorded yet.</li>';
-}
-</script>
-</main></div>
+</div></main></div>
 <footer class="site-footer"><div class="in">
 <div class="foot-links">
 <div><b>PAGES</b><a href="index.html">Home</a><a href="assessment.html">New assessment</a><a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it works</a><a href="about.html">About</a></div>
@@ -80,5 +157,102 @@ else{
 </div></footer>
 <script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script>
 <script>(function(){var b=document.getElementById("themeBtn");if(!b)return;function lab(){b.textContent=document.documentElement.getAttribute("data-theme")==="dark"?"Light mode":"Dark mode"}lab();b.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(d){document.documentElement.removeAttribute("data-theme");try{localStorage.setItem("axions-theme","light")}catch(e){}}else{document.documentElement.setAttribute("data-theme","dark");try{localStorage.setItem("axions-theme","dark")}catch(e){}}lab()})})();</script>
+<script src="planner.js"></script>
+<script>
+function fmt(n){if(n===null||n===undefined)return"-";return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+function esc(s){return String(s===null||s===undefined?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function countUp(el,to){var t0=null;function step(t){if(!t0)t0=t;
+  var p=Math.min((t-t0)/1300,1),e=1-Math.pow(1-p,3);
+  el.textContent=fmt(to*e);if(p<1)requestAnimationFrame(step)}
+  requestAnimationFrame(step)}
+var raw=null; try{ raw=localStorage.getItem("axions-planner-v1"); }catch(e){}
+var d=null; try{ d=raw?JSON.parse(raw):null; }catch(e){}
+if(!d||!d.plan){ document.getElementById("dashEmpty").style.display="block"; }
+else{
+  document.getElementById("dashShell").style.display="flex";
+  var p=d.plan, f=d.facts;
+  var passed=p.checks.filter(function(c){return c.ok}).length;
+  document.getElementById("dashVerdict").textContent =
+    passed===p.checks.length ? "All "+p.checks.length+" checks pass - the plan is valid and inside the cap."
+    : passed+" of "+p.checks.length+" checks pass - see the assessment for detail.";
+  countUp(document.getElementById("cTotal"), p.budget_total);
+  countUp(document.getElementById("cPeople"), p.people_to_feed);
+  countUp(document.getElementById("cJudges"), p.judges_used);
+  /* smooth schedule flow */
+  var blocks=p.schedule||[], total=blocks.reduce(function(a,b){return a+b.minutes},0)||1;
+  var W=560,H=170,pts=[],cum=0,maxm=0;
+  blocks.forEach(function(b){maxm=Math.max(maxm,b.minutes)});
+  blocks.forEach(function(b){var x0=cum/total*W;cum+=b.minutes;var x1=cum/total*W;
+    pts.push({x:(x0+x1)/2, y:H-(b.minutes/maxm)*130-10,
+      label:b.item, cx:(x0+x1)/2})});
+  function smooth(q){var s="M"+q[0].x.toFixed(1)+","+q[0].y.toFixed(1);
+    for(var i=0;i<q.length-1;i++){var p0=q[Math.max(i-1,0)],p1=q[i],
+      p2=q[i+1],p3=q[Math.min(i+2,q.length-1)];
+      s+=" C"+(p1.x+(p2.x-p0.x)/6).toFixed(1)+","+(p1.y+(p2.y-p0.y)/6).toFixed(1)
+        +" "+(p2.x-(p3.x-p1.x)/6).toFixed(1)+","+(p2.y-(p3.y-p1.y)/6).toFixed(1)
+        +" "+p2.x.toFixed(1)+","+p2.y.toFixed(1)}return s}
+  function shortLabel(s){s=String(s).toLowerCase();
+    if(s.indexOf("opening")>=0)return "Opening";
+    if(s.indexOf("prayer")>=0)return "Prayer";
+    if(s.indexOf("judging")>=0)return "Judging";
+    if(s.indexOf("closing")>=0||s.indexOf("award")>=0)return "Closing";
+    if(s.indexOf("hacking")>=0)return s.indexOf("part 2")>=0?"Hacking 2":"Hacking 1";
+    if(s==="undefined"||s==="")return "Break";
+    return String(s).split(" ")[0]}
+  var line=smooth(pts), area=line+" L"+pts[pts.length-1].x+","+H+" L"+pts[0].x+","+H+" Z";
+  document.getElementById("dashChart").innerHTML =
+    '<svg width="100%" height="195" viewBox="0 0 560 195">'
+    +'<path class="flowarea" d="'+area+'" fill="rgba(15,118,110,.14)"/>'
+    +'<path class="flowline" pathLength="100" d="'+line+'" fill="none" stroke="#0F766E" stroke-width="2.5" stroke-linecap="round"/>'
+    + pts.map(function(q){return '<circle class="dotp" cx="'+q.x+'" cy="'+q.y+'" r="4.5" fill="#F59E0B" stroke="#fff" stroke-width="2"/>'}).join("")
+    + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(H+18)+'" font-size="11" fill="#78716C" text-anchor="middle">'+esc(shortLabel(q.label))+'</text>'}).join("")
+    +'</svg>';
+  /* budget donut */
+  var committed=Math.max(0, p.budget_total-(p.venue?p.venue.price:0)-p.food_total-p.honorarium_total);
+  var segs=[["Food",p.food_total,"#0F766E"],["Committed",committed,"#F59E0B"],
+    ["Venue",p.venue?p.venue.price:0,"#44403C"],["Judging",p.honorarium_total,"#5EEAD4"]]
+    .filter(function(s){return s[1]>0});
+  var C=2*Math.PI*80, off=0, circles="";
+  segs.forEach(function(s){var ln=s[1]/p.budget_total*C;
+    circles+='<circle class="seg" cx="110" cy="110" r="80" fill="none" stroke="'+s[2]
+      +'" stroke-width="30" stroke-dasharray="'+(ln-3).toFixed(1)+" "+(C-ln+3).toFixed(1)
+      +'" stroke-dashoffset="'+(-off).toFixed(1)+'" transform="rotate(-90 110 110)"/>';
+    off+=ln});
+  var pctCap=Math.round(p.budget_total/p.budget_cap*100);
+  document.getElementById("dashDonut").innerHTML =
+    '<svg width="220" height="220">'+circles
+    +'<text x="110" y="106" font-size="21" font-weight="800" text-anchor="middle" fill="#1C1917">'+pctCap+'%</text>'
+    +'<text x="110" y="128" font-size="12" fill="#78716C" text-anchor="middle">of the cap used</text></svg>';
+  document.getElementById("dashLegend").innerHTML = segs.map(function(s){
+    return '<div class="lg"><span style="background:'+s[2]+'"></span>'+esc(s[0])+'<b>Rs '+fmt(s[1])+'</b></div>'}).join("");
+  /* stacked layers */
+  document.getElementById("dashStack").innerHTML =
+    '<div class="scard sc1"><small>JUDGING</small><b>'+p.judges_used+' judges</b><p>'+p.judging_minutes+' minutes - Rs '+fmt(p.honorarium_total)+'</p></div>'
+    +'<div class="scard sc2"><small>FOOD</small><b>'+esc(p.food?p.food.name:"-")+' x '+p.people_to_feed+'</b><p>Rs '+fmt(p.food?p.food.price_per_head:0)+' each - Rs '+fmt(p.food_total)+'</p></div>'
+    +'<div class="scard sc3"><small>VENUE</small><b>'+esc(p.venue?p.venue.name:"-")+'</b><p>Seats '+(p.venue?p.venue.capacity:"-")+' - Rs '+fmt(p.venue?p.venue.price:0)+'</p></div>';
+  /* health rings */
+  function ring(pct,col,big,small){var c=2*Math.PI*30;
+    return '<div class="ring"><svg width="80" height="80">'
+    +'<circle cx="40" cy="40" r="30" fill="none" stroke="#E7E5E4" stroke-width="8"/>'
+    +'<circle class="arc" cx="40" cy="40" r="30" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" style="--off:'+(c*(1-pct)).toFixed(1)+'" transform="rotate(-90 40 40)"/>'
+    +'<text x="40" y="46" font-size="15" font-weight="700" text-anchor="middle" fill="#1C1917">'+Math.round(pct*100)+'%</text></svg>'
+    +'<div><b>'+big+'</b><span>'+small+'</span></div></div>'}
+  document.getElementById("dashRings").innerHTML =
+    ring(p.budget_cap?p.budget_total/p.budget_cap:0, "#0F766E", "Budget used", "Rs "+fmt(p.budget_total)+" of "+fmt(p.budget_cap))
+    + ring(p.venue&&p.venue.capacity?p.people_to_feed/p.venue.capacity:0, "#F59E0B", "Venue filled", p.people_to_feed+" of "+(p.venue?p.venue.capacity:"-")+" seats")
+    + ring(p.judges_confirmed?p.judges_used/p.judges_confirmed:0, "#44403C", "Judges placed", p.judges_used+" of "+p.judges_confirmed+" confirmed");
+  /* activity */
+  var h=(d.history||[]).slice(-4).reverse();
+  document.getElementById("dashActivity").innerHTML = h.length ? h.map(function(x){
+    var cls=/reject/i.test(x.type)?"bad":(/update/i.test(x.type)&&!/full/i.test(x.type)?"warn":"");
+    return '<div><i class="'+cls+'"></i><span style="color:inherit;margin:0"><b>'+esc(x.type)+'</b> - '+esc(x.detail)+'</span><span>Rs '+fmt(x.total_after)+'</span></div>'}).join("")
+    : '<div><i></i>No runs recorded yet.</div>';
+  /* risks */
+  var recos=(typeof recommendations==="function")?recommendations(f,p):[];
+  if(recos.length){ document.getElementById("dashRisksBox").style.display="block";
+    document.getElementById("dashRisks").innerHTML=recos.map(function(r){
+      return '<div class="reco '+(r.level==="RISK"?"risk":"")+'"><b>'+r.level+'</b> '+esc(r.text)+'</div>'}).join(""); }
+}
+</script>
 </body>
 </html>
