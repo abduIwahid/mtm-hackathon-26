@@ -3,7 +3,7 @@
 **Event:** MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah — Wednesday 18 November 2026.
 **Team:** AXIONS — GDG On Campus CUI Attock. Lead + presenter: Abdul Wahid.
 
-**Live web app:** https://mtm-hackathon-26.vercel.app - upload your own message pack and the same agent runs in your browser: tabbed plan, fact ledger, decision evidence, risks and recommendations, a what-if simulator, agent chat, persistent sessions and the full trace. Plus How it works, Privacy and Terms pages.
+**Live web app:** https://mtm-hackathon-26.vercel.app - upload your own message pack and the same agent runs in your browser: tabbed plan, fact ledger, decision evidence, risks and recommendations, a what-if simulator, agent chat, persistent sessions and the full trace - plus a separate visual dashboard page (pinned sidebar, charts, stacked plan layers, health rings) and Landing, How it works, About, Privacy and Terms pages, all responsive with light and dark modes.
 
 ## The task
 
@@ -39,6 +39,7 @@ The same system as a multi-page website, deployed on Vercel. A visitor uploads a
 - **Decision evidence** - click the venue, food or judging card to see which message confirmed the choice, what it replaced, why it won, and why each alternative lost.
 - **Persistent sessions** - the session (fact base, plan, history, trace, chat) is kept in the browser's local storage, so when a new message arrives later, the agent reads it against the full context of the earlier runs. "Start a new plan" clears it.
 - **Server-side demo key** - model calls go through `demo/api/chat.js`, a small Vercel Function that proxies Groq with the `GROQ_API_KEY` environment variable. The key never reaches the browser; the function allows only the one small model and caps the tokens per call.
+- **Visual dashboard** (`dashboard.html`) - the saved session as an app shell, visual first: a sidebar pinned to the screen at full viewport height (it does not move on scroll or zoom), count-up stat chips, a smooth flowing schedule chart, a budget-composition donut, the plan as stacked layers that fan out on hover, plan-health rings, a latest-activity feed and the risks list. Everything is laid out in fluid CSS grid (a 1400px wrap with clamp-based padding, auto-fit rows) and reflows at every width - wide desktop, tablet and phone - with light and dark modes across the whole site.
 
 ## Tests
 
