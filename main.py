@@ -884,13 +884,63 @@ QUANTITY_UNITS = [
 _DIGIT_TABLE = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹٬", "01234567890123456789,")
 
 
+
+_NUMBER_WORDS = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4,
+                 "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+                 "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+                 "fourteen": 14, "fifteen": 15, "sixteen": 16,
+                 "seventeen": 17, "eighteen": 18, "nineteen": 19,
+                 "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+                 "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90}
+
+
+def words_to_digits(text):
+    """English number phrases -> digits ('one hundred and twenty' ->
+    '120'), so the quantity scan also catches quantities a message
+    spells out in words instead of digits."""
+    tokens = re.findall(r"[a-z]+|[^a-z]+", text)
+    out, i = [], 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if tok in _NUMBER_WORDS or tok in ("hundred", "thousand") or \
+                (tok == "a" and i + 2 < len(tokens)
+                 and tokens[i + 2] in ("hundred", "thousand")):
+            total, current, j = 0, 0, i
+            while j < len(tokens):
+                t = tokens[j]
+                if t in _NUMBER_WORDS:
+                    current += _NUMBER_WORDS[t]
+                elif t == "hundred":
+                    current = (current or 1) * 100
+                elif t == "thousand":
+                    total += (current or 1) * 1000
+                    current = 0
+                elif t == "a" and current == 0 and total == 0:
+                    current = 1
+                elif t == "and" and (current or total):
+                    pass
+                else:
+                    break
+                j += 1
+                if j < len(tokens) and tokens[j].strip() == "":
+                    j += 1
+            out.append(str(total + current))
+            if j > i and tokens[j - 1].strip() == "":
+                out.append(tokens[j - 1])
+            i = j
+        else:
+            out.append(tok)
+            i += 1
+    return "".join(out)
+
+
 def scan_conflicting_quantities(text, plan):
     """Find quantities a message imposes (a number right before a unit
     word) and check them against the plan's hard requirements. Returns a
     rejection reason string, or None."""
     if not plan:
         return None
-    low = normalize_digits(text.lower())
+    low = words_to_digits(normalize_digits(text.lower()))
     for pattern, area, need_key, template in QUANTITY_UNITS:
         need = plan.get(need_key)
         if need is None:
