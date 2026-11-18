@@ -12,8 +12,9 @@
 .dshell>*,.dmain>*,.drow>*{min-width:0}
 .dside{min-width:0;overflow:hidden}
 .dmain{min-width:0}
-.dside{width:230px;flex:none;background:#0B3B39;color:#E7E5E4;border-radius:20px;
-padding:24px 18px;display:flex;flex-direction:column;animation:rise .6s ease both}
+.dside{width:230px;background:#0B3B39;color:#E7E5E4;border-radius:20px;
+padding:24px 18px;display:flex;flex-direction:column;animation:rise .6s ease both;
+position:sticky;top:16px;height:calc(100dvh - 32px);overflow-y:auto;align-self:start}
 .dlogo{display:flex;gap:9px;align-items:center;font-weight:800;font-size:19px;margin-bottom:26px}
 .dlogo .mark{width:15px;height:15px;background:#14B8A6;border-radius:4px}
 .dnav a{display:block;color:#C9E8E4;text-decoration:none;padding:11px 12px;
@@ -77,7 +78,8 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 .act>div>div span:first-of-type{flex:1;min-width:0;overflow-wrap:break-word}
 .act>div>div span:last-of-type{flex:none;color:#78716C;font-size:12.5px;white-space:nowrap}
 @media (max-width:1100px){.dshell{grid-template-columns:1fr}
-.dside{width:auto}.dnav{display:flex;flex-wrap:wrap;gap:4px}
+.dside{width:auto;position:static;height:auto;overflow:visible}
+.dnav{display:flex;flex-wrap:wrap;gap:4px}
 .drow.r1,.drow.r2{grid-template-columns:1fr}}
 @media (max-width:640px){.stackwrap{height:210px}
 .scard{width:min(250px,86vw)}}
