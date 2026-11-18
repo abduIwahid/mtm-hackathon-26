@@ -94,6 +94,7 @@ function bubble(text, who) {
   d.textContent = text;
   th.appendChild(d);
   th.scrollTop = th.scrollHeight;
+  persist();
 }
 function agentSay(text) { bubble(text, "agent"); }
 function answerQuestion(raw) {
@@ -476,6 +477,7 @@ function render() {
   $("#view-trace").innerHTML = "<h2>Full trace</h2>" + stats +
     "<pre class='tracebox'>" + esc(S.trace.join("\n\n")) + "</pre>";
   $("#results").style.display = "block";
+  persist();
 }
 function recoHtml() {
   const recos = recommendations(S.facts, S.plan);
@@ -569,5 +571,52 @@ $("#chatSend").addEventListener("click", () => {
 $("#chatText").addEventListener("keydown", e => {
   if (e.key === "Enter") $("#chatSend").click();
 });
+/* ---------------- session persistence ----------------
+   The whole session (fact base, plan, history, trace, chat) is kept
+   in this browser's local storage, so when a new message arrives -
+   minutes or days later - the agent still has the full context of
+   the earlier runs. Nothing is sent to any server. */
+const LS_KEY = "axions-planner-v1";
+function persist() {
+  try {
+    if (!S || !S.plan) return;
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      facts: S.facts, plan: S.plan, rejected: S.rejected,
+      history: S.history, calls: S.calls, tokens: S.tokens,
+      trace: S.trace, seq: S.seq,
+      chat: $("#chatThread") ? $("#chatThread").innerHTML : ""}));
+  } catch (e) { /* storage full or blocked - session just won't persist */ }
+}
+function restore() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (!d.plan || !d.facts) return;
+    S = {facts: d.facts, plan: d.plan, rejected: d.rejected || [],
+      history: d.history || [], calls: d.calls || 0,
+      tokens: d.tokens || {prompt: 0, completion: 0, total: 0},
+      trace: d.trace || [], diffHtml: "", seq: d.seq || 1};
+    render();
+    if (d.chat) $("#chatThread").innerHTML = d.chat;
+    setStatus("Previous session restored - the agent remembers the " +
+      "earlier messages and runs. Send the next update in Agent " +
+      "chat, or start a new plan.");
+    agentSay("Welcome back - I still have the current plan (total " +
+      "Rs " + fmt(S.plan.budget_total) + ") and the history of " +
+      S.history.length + " run(s). Send the next message whenever " +
+      "it arrives; I will read it against everything so far.");
+  } catch (e) { /* corrupted saved state - start clean */ }
+}
+$("#resetBtn").addEventListener("click", () => {
+  try { localStorage.removeItem(LS_KEY); } catch (e) {}
+  S = null;
+  $("#results").style.display = "none";
+  $("#chatThread").innerHTML = "";
+  $("#crumbNow").textContent = "New plan";
+  setStatus("Session cleared. Upload a new message pack to start " +
+    "a fresh plan.");
+});
+restore();
 window.runWithText = t =>
   runFull(t).catch(e => setStatus(e.message, true));
