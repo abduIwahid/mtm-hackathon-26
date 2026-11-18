@@ -25,6 +25,10 @@ One command for everything. The first run (no `run/state.json`) treats the file 
 
 **Model:** `openai/gpt-oss-20b` via Groq for every call — a small model, chosen for the small-model bonus, speed (full run ≈ 5 seconds against a 2-minute limit) and a lean token count. Updates use at most 2 model calls (limit: 5).
 
+## Tests
+
+Offline regression suite (stub model, no network, no API key): `python3 run_tests.py` - unit tests for the deterministic defences (quantities in digits, words and Urdu digits; date parsing; fuzzy item matching) plus end-to-end runs: sample pack, budget change, the same change twice (no double-count), and the plausible-but-wrong message (rejected, plan unchanged). 23 checks.
+
 ## Run it
 
 1. Python 3 only — no packages to install (standard library only).

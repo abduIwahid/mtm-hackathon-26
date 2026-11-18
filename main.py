@@ -721,6 +721,20 @@ def render_plan_text(state):
         for r in state["rejected"]:
             out.append("    - \"%s\"" % r["message"][:160])
             out.append("      Reason: " + r["reason"])
+    ledger = fact_ledger_lines(state)
+    if ledger:
+        out.append("")
+        out.append("FACT LEDGER (where each fact came from):")
+        for line in ledger:
+            out.append("    - " + line)
+    if state.get("history"):
+        out.append("")
+        out.append("UPDATE HISTORY:")
+        for h in state["history"]:
+            total = ("Rs " + fmt(h["total"])) \
+                if h.get("total") is not None else "-"
+            out.append("    #%s %s - %s (total after: %s)"
+                       % (h["seq"], h["type"], h["detail"], total))
     return "\n".join(out)
 
 
@@ -758,6 +772,20 @@ def render_html(state, trace_text):
                         for r in facts["requests"])
         req = ("<h2>Requests noted (not approved - not in the plan)</h2>"
                "<ul>%s</ul>" % items)
+    ledger_html = ""
+    ledger_lines = fact_ledger_lines(state)
+    if ledger_lines:
+        ledger_html = ("<h2>Fact ledger</h2><table>%s</table>" % "".join(
+            "<tr><td>%s</td></tr>" % esc(x) for x in ledger_lines))
+    hist_html = ""
+    if state.get("history"):
+        hist_html = ("<h2>Update history</h2><table>%s</table>" % "".join(
+            "<tr><td class='t'>#%s</td><td>%s</td><td>%s</td>"
+            "<td class='n'>%s</td></tr>"
+            % (h["seq"], esc(h["type"]), esc(h["detail"]),
+               ("Rs " + fmt(h["total"])) if h.get("total") is not None
+               else "-")
+            for h in state["history"]))
     all_ok = all(c["ok"] for c in plan["checks"])
     n_fail = sum(1 for c in plan["checks"] if not c["ok"])
     banner = ("<div class='banner %s'>%s</div>" % (
@@ -886,7 +914,7 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
 <h2>Budget detail</h2><table>%s
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs %s</b></td></tr></table>
 <h2>Checks</h2><ul>%s</ul>
-%s%s
+%s%s%s%s
 <h2>Full trace</h2>%s<details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
 <div class="wordmark">AXIONS</div>
 </div></body></html>""" % (
@@ -901,7 +929,7 @@ white-space:nowrap;transition:max-width .35s ease;vertical-align:bottom}
         fmt(plan["budget_total"]), fmt(plan["budget_cap"]),
         fmt(plan["budget_remaining"]), meter,
         timeline, sched, rows, fmt(plan["budget_total"]), checks, rej, req,
-        stats, esc(trace_text))
+        ledger_html, hist_html, stats, esc(trace_text))
     with open(HTML_PATH, "w", encoding="utf-8") as fh:
         fh.write(html)
 
@@ -1056,7 +1084,56 @@ def scan_conflicting_quantities(text, plan):
 def new_state():
     return {"facts": empty_facts(), "plan": None, "rejected": [],
             "model_calls": 0, "total_tokens": 0, "seq": 0,
-            "messages_seen": []}
+            "messages_seen": [], "history": []}
+
+
+def log_history(state, type_, detail):
+    """Append one entry to the session's update history (shown in the
+    plan and the UI): what happened, and the budget total after it."""
+    plan = state.get("plan") or {}
+    state.setdefault("history", []).append(
+        {"seq": state.get("seq", 1), "type": type_, "detail": detail,
+         "total": plan.get("budget_total")})
+
+
+def fact_ledger_lines(state):
+    """One line per fact in the fact base, with the message it came
+    from (and its date, where the message carried one)."""
+    facts = state["facts"]
+    lines = []
+    for v in facts["venue_options"]:
+        lines.append("Venue option: %s - seats %s, Rs %s (message #%s)"
+                     % (v.get("name"), v.get("capacity"),
+                        fmt(v.get("price")), v.get("source", "?")))
+    for f in facts["food_options"]:
+        d = (" on " + str(f["date"])) if f.get("date") else ""
+        lines.append("Food: %s - Rs %s per head%s (message #%s)"
+                     % (f.get("name"), fmt(f.get("price_per_head")), d,
+                        f.get("source", "?")))
+    ju = facts["judging"]
+    if any(ju.get(k) is not None for k in
+           ("judges_confirmed", "honorarium_each", "minutes_per_team",
+            "max_teams_per_judge")):
+        lines.append("Judging: %s confirmed, Rs %s each, %s min per "
+                     "team, max %s teams per judge"
+                     % (ju.get("judges_confirmed"),
+                        fmt(ju.get("honorarium_each")),
+                        ju.get("minutes_per_team"),
+                        ju.get("max_teams_per_judge")))
+    for c in sorted(facts["committed"].values(),
+                    key=lambda c: c.get("item", "")):
+        d = (" on " + str(c["date"])) if c.get("date") else ""
+        lines.append("Committed cost: %s - Rs %s%s (message #%s)"
+                     % (c.get("item"), fmt(c.get("amount")), d,
+                        c.get("source", "?")))
+    for s in facts["schedule_requirements"]:
+        lines.append("Schedule requirement: %s - %s min (message #%s)"
+                     % (s.get("item"), s.get("minutes"),
+                        s.get("source", "?")))
+    for o in facts["other_constraints"]:
+        lines.append("Constraint: %s (message #%s)"
+                     % (o.get("text"), o.get("source", "?")))
+    return lines
 
 
 def save_outputs(state, trace_text):
@@ -1108,6 +1185,7 @@ def run_full(text):
     for c in plan["checks"]:
         trace.code("check [%s] %s - %s"
                    % ("PASS" if c["ok"] else "FAIL", c["name"], c["detail"]))
+    log_history(state, "Full run", "message pack read; plan built")
     trace_text = trace.render("TRACE - full run")
     save_outputs(state, trace_text)
     return state, trace_text
@@ -1153,6 +1231,7 @@ def run_update(text):
         trace.note("REJECTED by the code validator: " + conflict)
         state.setdefault("rejected", []).append(
             {"message": text.strip(), "reason": conflict})
+        log_history(state, "Update rejected", conflict)
         trace_text = trace.render("TRACE - update")
         save_outputs(state, trace_text)
         return state, trace_text
@@ -1165,6 +1244,10 @@ def run_update(text):
                        "not change and no area is recomputed")
         else:
             trace.note("message changes no planning fact - plan unchanged")
+        log_history(state,
+                    "Request noted" if kind == "request"
+                    else "Update ignored",
+                    route.get("summary", ""))
         trace_text = trace.render("TRACE - update")
         save_outputs(state, trace_text)
         return state, trace_text
@@ -1198,11 +1281,14 @@ def run_update(text):
                 {"message": text.strip(), "reason": rejected_reason})
         trace.note("REJECTED: " + rejected_reason)
         state["plan"] = build_plan(state["facts"])
+        log_history(state, "Update rejected", rejected_reason)
     else:
         state["plan"] = plan
         recomputed = list(dict.fromkeys(areas + ["budget"]))
         trace.code("update accepted; recomputed areas (in code): %s"
                    % ", ".join(recomputed))
+        log_history(state, "Update accepted",
+                    "recomputed areas: " + ", ".join(recomputed))
         for c in plan["checks"]:
             trace.code("check [%s] %s - %s"
                        % ("PASS" if c["ok"] else "FAIL",
