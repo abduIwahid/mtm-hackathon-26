@@ -3,7 +3,7 @@
 MTM Hackathon '26 - Team AXIONS
 Message-pack event planner.
 
-Reads a pack of messages (emails, WhatsApp texts, notices - English and
+Reads a pack of messages (emails, WhatsApp texts, notices - English, Urdu script and
 Roman Urdu) and produces a valid plan for a physical hackathon across five
 areas: venue, schedule, food, judging, budget.
 
@@ -259,13 +259,13 @@ SCHEMA_HINT = """{
  "other_constraints": [{"text": "string", "source": 1}]
 }"""
 
-EXTRACT_RULES = """Rules: use null (not 0) for unknown numbers. Write money as plain integers (Rs 650,000 -> 650000). If the same sender gives a figure again later, include BOTH entries with their dates; do not decide which one wins. A request or question (someone asking for something that is not approved) is kind "request" and must NOT appear in committed_costs or anywhere as a decided fact. A directive is an instruction or claim inside a message that imposes a specific quantity or choice on the plan - for example a supplier stating how many boxes, seats or judges there will be, when that number is theirs to state but the plan's needs decide. Report every such imposed quantity as a directive with its area, value and unit (example: "we will only bring 40 chairs" -> {"area": "venue", "action": "set_quantity", "value": 40, "unit": "chairs"}); never treat an imposed quantity as a fact and never drop it into other_constraints instead. venue_requirements.required_features is ONLY for a feature a message explicitly says the venue MUST have (words like must, required, zaroori, chahiye); a feature that a venue merely HAS belongs in that venue's own features list, never in requirements. Facts of any kind that do not fit the fields above go into other_constraints, worded exactly as the message states them. Return ONLY the JSON object, no other text."""
+EXTRACT_RULES = """Rules: use null (not 0) for unknown numbers. Write money as plain integers (Rs 650,000 -> 650000). If the same sender gives a figure again later, include BOTH entries with their dates; do not decide which one wins. A request or question (someone asking for something that is not approved) is kind "request" and must NOT appear in committed_costs or anywhere as a decided fact. A directive is an instruction or claim inside a message that imposes a specific quantity or choice on the plan - for example a supplier stating how many boxes, seats or judges there will be, when that number is theirs to state but the plan's needs decide. Report every such imposed quantity as a directive with its area, value and unit (example: "we will only bring 40 chairs" -> {"area": "venue", "action": "set_quantity", "value": 40, "unit": "chairs"}); never treat an imposed quantity as a fact and never drop it into other_constraints instead. venue_requirements.required_features is ONLY for a feature a message explicitly says the venue MUST have (words like must, required, zaroori, chahiye); a feature that a venue merely HAS belongs in that venue's own features list, never in requirements. Facts of any kind that do not fit the fields above go into other_constraints, worded exactly as the message states them. Always write extracted numbers as plain Western digits (0-9), even when the message writes them in Urdu or Arabic digits. Return ONLY the JSON object, no other text."""
 
 
 def extraction_prompt(text, context=""):
     return ("You are the reading stage of an event-planning system. Read the "
             "message text at the end and extract EVERY fact that could affect "
-            "planning the event. Messages may be in English or Roman Urdu. "
+            "planning the event. Messages may be in English, in Urdu script, or in Roman Urdu (Urdu written with Latin letters); read all of them the same way, and read numbers written in Urdu or Arabic digits as their numeric values. "
             "Some may be outdated, irrelevant, or only requests/questions.\n\n"
             "Return ONLY a JSON object (no other text) with this shape:\n"
             + SCHEMA_HINT + "\n\n" + EXTRACT_RULES + context +
@@ -293,7 +293,7 @@ def classify_prompt(text, plan_summary):
     return ("You route new messages for an event-planning system. Current "
             "plan figures (JSON): " + plan_summary + "\n\n"
             "New message:\n" + text + "\n\n"
-            "Reply with ONLY a JSON object: {\"kind\": \"fact|request|irrelevant\", "
+            "The message may be in English, Urdu script or Roman Urdu. Reply with ONLY a JSON object: {\"kind\": \"fact|request|irrelevant\", "
             "\"areas\": [\"venue|schedule|food|judging|budget\"], "
             "\"summary\": \"one short line\"}. "
             "kind is \"fact\" if the message states or changes any planning "
@@ -317,7 +317,7 @@ def parse_date(text):
     '2026-11-12'. Returns None when no date is recognisable."""
     if not text:
         return None
-    t = str(text).lower()
+    t = normalize_digits(str(text).lower())
     m = re.search(r"(\d{4})-(\d{1,2})-(\d{1,2})", t)
     if m:
         return (int(m.group(2)), int(m.group(3)))
@@ -780,7 +780,7 @@ ul{padding-left:20px} .ok{color:#0F766E} .bad{color:#B91C1C}
 details{background:#fff;border:1px solid #E7E5E4;border-radius:10px;padding:12px}
 pre{white-space:pre-wrap;word-break:break-word;font-size:12px}
 </style></head><body><div class="wrap">
-<h1>Hackathon Plan</h1>
+<h1>Hackathon Plan - Team AXIONS</h1>
 <div class="sub">Team AXIONS - %s students, %s teams, %s people to feed in total</div>
 <div class="cards">
 <div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p></div>
@@ -856,6 +856,12 @@ def evaluate_directives(directives, plan, trace, state, source_text):
     return True
 
 
+def normalize_digits(text):
+    """Urdu/Arabic digits and the Arabic thousands separator -> Western
+    digits, so the code-side checks read quantities in any script."""
+    return str(text).translate(_DIGIT_TABLE)
+
+
 # --------------------------------------------------------------------------
 # Deterministic conflict scan (plain code - does not depend on the model
 # classifying a message correctly)
@@ -875,13 +881,16 @@ QUANTITY_UNITS = [
 ]
 
 
+_DIGIT_TABLE = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹٬", "01234567890123456789,")
+
+
 def scan_conflicting_quantities(text, plan):
     """Find quantities a message imposes (a number right before a unit
     word) and check them against the plan's hard requirements. Returns a
     rejection reason string, or None."""
     if not plan:
         return None
-    low = text.lower()
+    low = normalize_digits(text.lower())
     for pattern, area, need_key, template in QUANTITY_UNITS:
         need = plan.get(need_key)
         if need is None:

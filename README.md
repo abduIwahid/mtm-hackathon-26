@@ -5,7 +5,7 @@
 
 ## The task
 
-Build an agent system that reads a pack of messages (emails, WhatsApp texts, notices — English and Roman Urdu; some irrelevant, some out of date) and plans a 4-hour physical hackathon across five areas: **venue, schedule, food, judging, budget**. At judging, the system runs on an unseen pack with different numbers, wording and senders.
+Build an agent system that reads a pack of messages (emails, WhatsApp texts, notices — English, Urdu script and Roman Urdu; some irrelevant, some out of date) and plans a 4-hour physical hackathon across five areas: **venue, schedule, food, judging, budget**. At judging, the system runs on an unseen pack with different numbers, wording and senders.
 
 ## How it works
 
