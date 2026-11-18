@@ -736,7 +736,7 @@ def render_html(state, trace_text):
         "<tr><td>%s</td><td class='n'>Rs %s</td></tr>" % (esc(n), fmt(a))
         for n, a in plan["budget_lines"])
     sched = "".join(
-        "<tr><td>%d-%d</td><td>%s</td><td class='n'>%d min</td></tr>"
+        "<tr><td class='t'>%d-%d</td><td>%s</td><td class='n'>%d min</td></tr>"
         % (b["start"], b["end"], esc(b["item"]), b["minutes"])
         for b in plan["schedule"])
     checks = "".join(
@@ -747,17 +747,60 @@ def render_html(state, trace_text):
     rej = ""
     if state.get("rejected"):
         items = "".join(
-            "<li>\"%s\"<br><b>Reason:</b> %s</li>"
+            "<li><span dir='auto'>\"%s\"</span><br><b>Reason:</b> %s</li>"
             % (esc(r["message"][:300]), esc(r["reason"]))
             for r in state["rejected"])
-        rej = "<h2>Rejected messages</h2><ul class='rej'>%s</ul>" % items
+        rej = ("<div class='rejbox'><h2>Rejected messages</h2>"
+               "<ul class='rej'>%s</ul></div>" % items)
     req = ""
     if facts["requests"]:
         items = "".join("<li>%s</li>" % esc(r.get("summary", ""))
                         for r in facts["requests"])
         req = ("<h2>Requests noted (not approved - not in the plan)</h2>"
                "<ul>%s</ul>" % items)
+    all_ok = all(c["ok"] for c in plan["checks"])
+    n_fail = sum(1 for c in plan["checks"] if not c["ok"])
+    banner = ("<div class='banner %s'>%s</div>" % (
+        "okb" if all_ok else "badb",
+        ("ALL CHECKS PASS" if all_ok else "%d CHECK(S) FAILING" % n_fail)
+        + " &middot; Total Rs %s of Rs %s &middot; Rs %s remaining"
+        % (fmt(plan["budget_total"]), fmt(plan["budget_cap"]),
+           fmt(plan["budget_remaining"]))))
+    seg_colors = []
+    for b in plan["schedule"]:
+        name = b["item"].lower()
+        if "prayer" in name or "namaz" in name:
+            seg_colors.append("#B45309")
+        elif "judg" in name:
+            seg_colors.append("#134E4A")
+        elif "hack" in name or "build" in name or "work" in name:
+            seg_colors.append("#0F766E")
+        else:
+            seg_colors.append("#44403C")
+    segs = "".join(
+        "<div style='flex:%d;background:%s'>%s</div>"
+        % (b["minutes"], col,
+           "%d min" % b["minutes"] if b["minutes"] >= 25 else "")
+        for b, col in zip(plan["schedule"], seg_colors))
+    legend = " &middot; ".join(
+        "%s (%d min)" % (esc(b["item"]), b["minutes"])
+        for b in plan["schedule"])
+    timeline = ("<div class='tl'>%s</div>"
+                "<div class='tllegend'>%s</div>" % (segs, legend))
     v, f = plan["venue"], plan["food"]
+    chips = ""
+    if v and v.get("features"):
+        chips = ("<div class='chips'>" + "".join(
+            "<span class='chip'>%s</span>" % esc(x)
+            for x in v["features"]) + "</div>")
+    pct = 0
+    if plan["budget_cap"]:
+        pct = round(100.0 * plan["budget_total"] / plan["budget_cap"])
+    meter = ("<div class='meter'><div style='width:%d%%'></div></div>"
+             "<p class='capnote'>%d%% of the budget used</p>" % (pct, pct))
+    stats = ("<p class='sub'>Model calls so far: %s &middot; "
+             "Total tokens (as reported by the API): %s</p>"
+             % (fmt(state["model_calls"]), fmt(state["total_tokens"])))
     html = """<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -774,39 +817,64 @@ h1{font-size:26px;margin:0 0 4px} h2{font-size:18px;margin:22px 0 8px}
 .card p{margin:0;font-size:17px}
 table{width:100%%;border-collapse:collapse;background:#fff;
 border:1px solid #E7E5E4;border-radius:10px;overflow:hidden}
-td{padding:8px 12px;border-top:1px solid #E7E5E4} td.n{text-align:right;white-space:nowrap}
+td{padding:8px 12px;border-top:1px solid #E7E5E4} td.n{text-align:right;white-space:nowrap} td.t{white-space:nowrap}
 ul{padding-left:20px} .ok{color:#0F766E} .bad{color:#B91C1C}
 .rej li{margin-bottom:10px}
 details{background:#fff;border:1px solid #E7E5E4;border-radius:10px;padding:12px}
 pre{white-space:pre-wrap;word-break:break-word;font-size:12px}
+.banner{border-radius:10px;padding:12px 16px;color:#fff;font-weight:600;
+margin-bottom:16px}
+.banner.okb{background:#0F766E} .banner.badb{background:#B91C1C}
+.tl{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-bottom:6px}
+.tl div{color:#fff;font-size:12px;display:flex;align-items:center;
+justify-content:center;overflow:hidden;white-space:nowrap;min-width:0}
+.tllegend{font-size:12px;color:#57534E;margin-bottom:10px}
+.rejbox{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;
+padding:6px 16px 12px;margin-top:22px}
+.rejbox h2{color:#B91C1C;margin-top:10px}
+.pbtn{float:right;background:#1C1917;color:#fff;border:0;border-radius:8px;
+padding:9px 14px;font-size:14px;cursor:pointer}
+.chips{margin-top:8px}
+.chip{display:inline-block;background:#F5F5F4;border:1px solid #E7E5E4;
+border-radius:999px;padding:2px 10px;font-size:12px;margin:0 4px 4px 0;
+color:#44403C}
+.meter{background:#E7E5E4;border-radius:999px;height:10px;margin-top:10px;
+overflow:hidden}
+.meter div{background:#0F766E;height:100%%}
+.capnote{font-size:13px;color:#57534E;margin-top:6px}
+@media print{body{background:#fff;padding:0}details{display:none}
+.pbtn{display:none}
+.card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
 <h1>Hackathon Plan - Team AXIONS</h1>
-<div class="sub">Team AXIONS - %s students, %s teams, %s people to feed in total</div>
+<button class='pbtn' onclick='window.print()'>Print / save as PDF</button>
+<div class="sub">%s students, %s teams, %s people to feed in total</div>
+%s
 <div class="cards">
-<div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p></div>
+<div class="card"><h3>VENUE</h3><p>%s</p><p>Seats %s - Rs %s</p>%s</div>
 <div class="card"><h3>FOOD</h3><p>%s</p><p>%s boxes - Rs %s</p></div>
 <div class="card"><h3>JUDGING</h3><p>%s judges (%s confirmed)</p><p>%s minutes - Rs %s</p></div>
-<div class="card"><h3>BUDGET</h3><p>Rs %s of Rs %s</p><p>Remaining: Rs %s</p></div>
+<div class="card"><h3>BUDGET</h3><p>Rs %s of Rs %s</p><p>Remaining: Rs %s</p>%s</div>
 </div>
-<h2>Schedule</h2><table>%s</table>
+<h2>Schedule</h2>%s<table>%s</table>
 <h2>Budget detail</h2><table>%s
 <tr><td><b>TOTAL</b></td><td class="n"><b>Rs %s</b></td></tr></table>
 <h2>Checks</h2><ul>%s</ul>
 %s%s
-<h2>Full trace</h2><details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
+<h2>Full trace</h2>%s<details><summary>Show the trace (every model call, inputs, outputs, tokens)</summary><pre>%s</pre></details>
 </div></body></html>""" % (
-        plan["students"], plan["teams"], plan["people_to_feed"],
+        plan["students"], plan["teams"], plan["people_to_feed"], banner,
         esc(v.get("name") if v else "NOT FOUND"),
         v.get("capacity") if v else "-",
-        fmt(v.get("price")) if v else "-",
+        fmt(v.get("price")) if v else "-", chips,
         esc(f.get("name") if f else "NOT FOUND"), plan["people_to_feed"],
         fmt(plan["food_total"]),
         plan["judges_used"], plan["judges_confirmed"],
         plan["judging_minutes"], fmt(plan["honorarium_total"]),
         fmt(plan["budget_total"]), fmt(plan["budget_cap"]),
-        fmt(plan["budget_remaining"]),
-        sched, rows, fmt(plan["budget_total"]), checks, rej, req,
-        esc(trace_text))
+        fmt(plan["budget_remaining"]), meter,
+        timeline, sched, rows, fmt(plan["budget_total"]), checks, rej, req,
+        stats, esc(trace_text))
     with open(HTML_PATH, "w", encoding="utf-8") as fh:
         fh.write(html)
 
