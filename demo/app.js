@@ -27,19 +27,19 @@ function busy(b) {
 }
 
 async function callModel(area, prompt, maxTokens) {
-  const base = $("#baseInput").value.trim().replace(/\/$/, "") ||
-    "https://api.groq.com/openai/v1";
-  const key = $("#keyInput").value.trim();
-  if (!key) throw new Error("Add your API key first (Advanced settings). " +
-    "It stays in this browser and is sent only to the API endpoint.");
+  const qp = new URLSearchParams(location.search);
+  const override = qp.get("base");
+  const url = override
+    ? override.replace(/\/$/, "") + "/chat/completions" : "/api/chat";
+  const headers = { "Content-Type": "application/json" };
+  if (override) headers["Authorization"] = "Bearer " + (qp.get("key") || "");
   let lastErr = null;
   for (let attempt = 1; attempt <= 3; attempt++) {
     let res;
     try {
-      res = await fetch(base + "/chat/completions", {
+      res = await fetch(url, {
         method: "POST",
-        headers: {"Content-Type": "application/json",
-          "Authorization": "Bearer " + key},
+        headers: headers,
         body: JSON.stringify({model: MODEL_NAME, temperature: 0,
           max_tokens: maxTokens,
           response_format: {type: "json_object"},
@@ -569,8 +569,5 @@ $("#chatSend").addEventListener("click", () => {
 $("#chatText").addEventListener("keydown", e => {
   if (e.key === "Enter") $("#chatSend").click();
 });
-const qp = new URLSearchParams(location.search);
-if (qp.get("base")) $("#baseInput").value = qp.get("base");
-if (qp.get("key")) $("#keyInput").value = qp.get("key");
 window.runWithText = t =>
   runFull(t).catch(e => setStatus(e.message, true));

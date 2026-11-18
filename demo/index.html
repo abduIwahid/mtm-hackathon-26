@@ -30,13 +30,7 @@
 <div class="dropzone" id="dropzone"><b>Drop the messages file here</b> or click to choose it (.txt)<input type="file" id="fileInput" accept=".txt,.md,text/plain" hidden></div>
 <label class="flabel" for="msgText">Messages (or paste them here)</label>
 <textarea id="msgText" placeholder="Paste the full message pack here - every message, exactly as received."></textarea>
-<details class="adv"><summary>Advanced settings - model API</summary>
-<label class="flabel" for="keyInput">Your API key (stays in this browser, sent only to the endpoint below)</label>
-<input type="password" id="keyInput" placeholder="Groq API key" autocomplete="off">
-<label class="flabel" for="baseInput">API endpoint (OpenAI-compatible)</label>
-<input type="text" id="baseInput" value="https://api.groq.com/openai/v1">
-<p class="note">Model: openai/gpt-oss-20b for every call - a small model, on purpose. See the <a href="privacy.html">privacy page</a> for exactly what leaves your browser.</p>
-</details>
+<p class="note">No key needed here - the demo runs on the site's own API key, held on the server and never shown to your browser. Your message text is sent through this site's proxy to the model API; see the <a href="privacy.html">privacy page</a>.</p>
 <div class="btnrow"><button class="btn" id="runBtn">Run the planner</button></div>
 <div class="status" id="status"></div>
 </section>

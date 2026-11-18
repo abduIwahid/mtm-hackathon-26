@@ -22,11 +22,11 @@
 <nav class="crumbs"><a href="index.html">Home</a><span class="sep">›</span><span class="now">Privacy</span></nav>
 <div class="wrap"><main class="prose">
 <h1>Privacy</h1>
-<p class="sub">Short version: this site has no server and no accounts. Your file and your key stay in your browser, except for the one thing the tool exists to do - sending your message text to the model API you choose.</p>
+<p class="sub">Short version: this site has no accounts and stores nothing. The one thing that leaves your browser is your message text, sent through this site's proxy to the model API so the agent can read it.</p>
 <h2>What leaves your browser</h2>
 <ul>
-<li><b>Your message text</b> is sent to the API endpoint shown in Advanced settings (by default Groq, https://api.groq.com) so the model can read it. That provider's own privacy policy governs what it does with the text. Do not paste confidential material you would not send to that provider.</li>
-<li><b>Your API key</b> is sent only to that same endpoint, as the authorization header of the model calls. It is never sent to us - there is no "us" server - and it is not stored: it lives in the page's memory and disappears when you close the tab.</li>
+<li><b>Your message text</b> is sent through this site's proxy function to Groq (api.groq.com) so the model can read it. Groq's own privacy policy governs what it does with the text. Do not paste confidential material you would not send to that provider.</li>
+<li><b>The demo API key</b> belongs to the site owner and is held as an environment variable on the server. It is never sent to your browser, never shown on any page, and is used only to run the model calls this tool makes.</li>
 </ul>
 <h2>What never leaves your browser</h2>
 <ul>
@@ -35,7 +35,7 @@
 <li>The file you upload is read locally in the page. It is not transmitted as a file; only its text goes into the model calls described above.</li>
 </ul>
 <h2>The terminal version</h2>
-<p>The command-line version in the repository runs on your own machine. It makes the same model calls with your key and writes its outputs (plan, trace, state) to a local folder. Nothing else is transmitted.</p>
+<p>The command-line version in the repository runs on your own machine. It makes the same model calls with your own key (from your .env file) and writes its outputs (plan, trace, state) to a local folder. Nothing else is transmitted.</p>
 <h2>Changes</h2>
 <p>If this policy changes, the new version will be published on this page with the change described in the repository history.</p>
 </main></div>
