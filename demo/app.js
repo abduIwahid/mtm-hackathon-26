@@ -24,6 +24,9 @@ function busy(b) {
   $("#runBtn").disabled = b;
   document.querySelectorAll("[data-break], #applyBtn")
     .forEach(x => x.disabled = b);
+  const sk = $("#skel"), rs = $("#results");
+  if (sk) sk.style.display =
+    (b && rs && rs.style.display === "none") ? "block" : "none";
 }
 
 async function callModel(area, prompt, maxTokens) {

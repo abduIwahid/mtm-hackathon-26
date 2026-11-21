@@ -5,7 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>New assessment - AXIONS Hackathon Planner</title>
 <meta name="description" content="Upload a pack of event messages and get a validated hackathon plan - venue, schedule, food, judging and budget - with risks and recommendations.">
-<script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
+<script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><meta name="description" content="AXIONS Planner reads a pack of event messages - emails, WhatsApp notes and notices - and builds a complete, validated hackathon plan: venue, schedule, food, judging and budget.">
+<meta name="theme-color" content="#0F766E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AXIONS Hackathon Planner">
+<meta property="og:title" content="AXIONS - Hackathon Planner">
+<meta property="og:description" content="A hackathon plan, built from its messages - and checked. The model reads. Code decides.">
+<meta property="og:url" content="https://mtm-hackathon-26.vercel.app/">
+<meta property="og:image" content="https://mtm-hackathon-26.vercel.app/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AXIONS - Hackathon Planner">
+<meta name="twitter:description" content="A hackathon plan, built from its messages - and checked. The model reads. Code decides.">
+<meta name="twitter:image" content="https://mtm-hackathon-26.vercel.app/og-card.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -35,6 +52,13 @@
 <p class="note">No key needed here - the demo runs on the site's own API key, held on the server and never shown to your browser. Your message text is sent through this site's proxy to the model API; see the <a href="privacy.html">privacy page</a>.</p>
 <div class="btnrow"><button class="btn" id="runBtn">Run the planner</button></div>
 <div class="status" id="status"></div>
+</section>
+
+<section id="skel" class="skelwrap" style="display:none" aria-hidden="true">
+<div class="skel sk-banner"></div>
+<div class="skelrow"><div class="skel sk-card"></div><div class="skel sk-card"></div><div class="skel sk-card"></div><div class="skel sk-card"></div></div>
+<div class="skel sk-bar"></div>
+<div class="skel sk-table"></div>
 </section>
 
 <section id="results" style="display:none">
@@ -86,11 +110,17 @@
 <div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
 <div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="assessment.html">Live planner</a></div>
 </div>
+<button class="installbtn" id="installBtn" type="button" hidden>Install the app</button>
 <p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
 <div class="wordmark">AXIONS</div>
 </div></footer>
 <script src="planner.js"></script>
 <script src="app.js"></script>
 <script>(function(){var b=document.getElementById("themeBtn");if(!b)return;function lab(){b.textContent=document.documentElement.getAttribute("data-theme")==="dark"?"Light mode":"Dark mode"}lab();b.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(d){document.documentElement.removeAttribute("data-theme");try{localStorage.setItem("axions-theme","light")}catch(e){}}else{document.documentElement.setAttribute("data-theme","dark");try{localStorage.setItem("axions-theme","dark")}catch(e){}}lab()})})();</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+var _ip=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();_ip=e;var b=document.getElementById("installBtn");if(b)b.hidden=false});
+document.addEventListener("click",function(e){if(e.target&&e.target.id==="installBtn"&&_ip){_ip.prompt();_ip.userChoice.then(function(){_ip=null;var b=document.getElementById("installBtn");if(b)b.hidden=true})}});
+</script>
 </body>
 </html>

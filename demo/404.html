@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Page not found - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><meta name="description" content="AXIONS Planner reads a pack of event messages - emails, WhatsApp notes and notices - and builds a complete, validated hackathon plan: venue, schedule, food, judging and budget.">
+<meta name="theme-color" content="#0F766E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AXIONS Hackathon Planner">
+<meta property="og:title" content="AXIONS - Hackathon Planner">
+<meta property="og:description" content="A hackathon plan, built from its messages - and checked. The model reads. Code decides.">
+<meta property="og:url" content="https://mtm-hackathon-26.vercel.app/">
+<meta property="og:image" content="https://mtm-hackathon-26.vercel.app/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AXIONS - Hackathon Planner">
+<meta name="twitter:description" content="A hackathon plan, built from its messages - and checked. The model reads. Code decides.">
+<meta name="twitter:image" content="https://mtm-hackathon-26.vercel.app/og-card.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="in">
+<a class="brand" href="index.html"><span class="mark"></span>AXIONS
+<small>Hackathon Planner</small></a>
+<button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<nav class="mainnav" id="mainnav">
+<a href="index.html">Home</a>
+<a href="assessment.html">New assessment</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="how-it-works.html">How it works</a>
+<a href="about.html">About</a>
+<button class="themebtn" id="themeBtn" type="button">Dark mode</button>
+<a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div></header>
+<div class="wrap"><main>
+<section class="hero" style="text-align:center;padding-top:clamp(48px,9vw,96px)">
+<p class="pm-title" style="font-family:var(--font-mono);color:var(--teal);letter-spacing:.1em;font-weight:700">ERROR 404</p>
+<h1 style="font-size:clamp(34px,6vw,58px)">This page never made the plan.</h1>
+<p class="sub" style="margin:0 auto;max-width:520px">The link is wrong, or the page moved. The planner only works with facts it can find - and this page is not one of them.</p>
+<div class="cta" style="justify-content:center">
+<a class="btn" href="index.html">Back to home</a>
+<a class="btn ghost" href="assessment.html">Start a new assessment</a>
+</div>
+</section>
+</main></div>
+<footer class="site-footer"><div class="in">
+<div class="foot-links">
+<div><b>PAGES</b><a href="index.html">Home</a><a href="assessment.html">New assessment</a><a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it works</a><a href="about.html">About</a></div>
+<div><b>LEGAL</b><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+<div><b>PROJECT</b><a href="https://github.com/abduIwahid/mtm-hackathon-26" target="_blank" rel="noopener">GitHub repository</a><a href="assessment.html">Live planner</a></div>
+</div>
+<button class="installbtn" id="installBtn" type="button" hidden>Install the app</button>
+<p class="foot-note">Team AXIONS · MTM Hackathon '26 · The model reads. Code decides.</p>
+<div class="wordmark">AXIONS</div>
+</div></footer>
+<script>document.getElementById("burger").addEventListener("click",function(){document.getElementById("mainnav").classList.toggle("open")});</script>
+<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;function lab(){b.textContent=document.documentElement.getAttribute("data-theme")==="dark"?"Light mode":"Dark mode"}lab();b.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(d){document.documentElement.removeAttribute("data-theme");try{localStorage.setItem("axions-theme","light")}catch(e){}}else{document.documentElement.setAttribute("data-theme","dark");try{localStorage.setItem("axions-theme","dark")}catch(e){}}lab()})})();</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+var _ip=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();_ip=e;var b=document.getElementById("installBtn");if(b)b.hidden=false});
+document.addEventListener("click",function(e){if(e.target&&e.target.id==="installBtn"&&_ip){_ip.prompt();_ip.userChoice.then(function(){_ip=null;var b=document.getElementById("installBtn");if(b)b.hidden=true})}});
+</script>
+</body>
+</html>

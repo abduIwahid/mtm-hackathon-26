@@ -400,3 +400,26 @@ svg{max-width:100%}
   .marquee .track{animation:none;padding-left:0}
   .rv{opacity:1;transform:none}
 }
+
+/* ---------- skeleton loader (first run) ---------- */
+.skelwrap{margin-top:18px}
+.skel{background:#EDECEA;border-radius:10px;animation:skpulse 1.3s ease-in-out infinite}
+@keyframes skpulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sk-banner{height:52px;border-radius:12px}
+.skelrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:12px;margin-top:12px}
+.sk-card{height:86px;border-radius:14px}
+.sk-card:nth-child(2){animation-delay:.12s}
+.sk-card:nth-child(3){animation-delay:.24s}
+.sk-card:nth-child(4){animation-delay:.36s}
+.sk-bar{height:36px;margin-top:12px;animation-delay:.1s}
+.sk-table{height:150px;border-radius:14px;margin-top:12px;animation-delay:.18s}
+html[data-theme="dark"] .skel{background:#292524}
+
+/* ---------- install button (PWA) ---------- */
+.installbtn{background:#fff;border:1px solid var(--teal);color:var(--teal-d);
+border-radius:999px;padding:9px 18px;font:inherit;font-size:14px;font-weight:600;
+cursor:pointer;margin-bottom:14px;min-height:42px;
+transition:background .2s var(--ease),color .2s var(--ease),transform .15s var(--ease)}
+.installbtn:hover{background:var(--teal);color:#fff}
+.installbtn:active{transform:scale(.97)}
+html[data-theme="dark"] .installbtn{background:transparent;color:#5EEAD4;border-color:#134E4A}

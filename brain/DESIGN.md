@@ -14,3 +14,4 @@ no invented metrics, no re-drawn chrome. Breakpoints + the 320–1920 overflow c
 - Motion: one-shot reveals with per-child stagger inside .rv containers; meter fills transition; marquee pauses on hover; full prefers-reduced-motion kill switch.
 - Home hero carries a "sample plan" card — the planner's real verified output on the brief's pack (Rs 547,400 of Rs 650,000, 6/6 checks) — product first, no stock imagery.
 - Verified: no horizontal overflow on 7 pages x 9 widths (320-1920), light + dark, before deploy.
+- Follow-ups shipped same day: skeleton loader on the first assessment run (pulse blocks mirroring the result layout, shown only while no plan exists), OG/Twitter card meta on all pages with a branded og-card.png, a styled 404.html, and PWA support (manifest + icons + service worker; pages network-first, /api never cached; install button appears only when the browser offers it).
