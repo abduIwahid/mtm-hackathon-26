@@ -177,7 +177,7 @@ tbody tr{transition:background .15s var(--ease)}
 tbody tr:nth-child(even){background:#FFFBF0}
 tr.clickable{cursor:pointer}
 tr.clickable:hover td{background:var(--yellow-t)}
-td.n,th.n{text-align:right}
+td.n,th.n{text-align:right;width:1%;white-space:nowrap}
 .reco{background:#fff;border:2.5px solid var(--ink);border-radius:8px;
   box-shadow:var(--sh-sm);padding:12px 16px;margin:9px 0;font-size:15px;
   display:flex;gap:12px;align-items:flex-start;

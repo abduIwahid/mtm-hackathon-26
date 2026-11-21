@@ -1,6 +1,6 @@
 {
-  "name": "AXIONS Hackathon Planner",
-  "short_name": "AXIONS",
+  "name": "PlanKaro",
+  "short_name": "PlanKaro",
   "description": "Reads a pack of event messages and builds a complete, validated hackathon plan: venue, schedule, food, judging and budget.",
   "start_url": ".",
   "scope": ".",
