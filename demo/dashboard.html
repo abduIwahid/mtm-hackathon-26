@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><meta name="description" content="AXIONS Planner reads a pack of event messages - emails, WhatsApp notes and notices - and builds a complete, validated hackathon plan: venue, schedule, food, judging and budget.">
-<meta name="theme-color" content="#0F766E">
+<meta name="theme-color" content="#FFDC58">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AXIONS Hackathon Planner">
 <meta property="og:title" content="AXIONS - Hackathon Planner">
@@ -29,19 +29,19 @@
 .dshell>*,.dmain>*,.drow>*{min-width:0}
 .dside{min-width:0;overflow:hidden}
 .dmain{min-width:0}
-.dside{width:230px;background:#0B3B39;color:#E7E5E4;border-radius:20px;
+.dside{width:230px;background:#111110;color:#E7E5E4;border-radius:20px;
 padding:24px 18px;display:flex;flex-direction:column;animation:rise .6s ease both;
 position:sticky;top:16px;height:calc(100dvh - 32px);overflow-y:auto;align-self:start}
 .dlogo{display:flex;gap:9px;align-items:center;font-weight:800;font-size:19px;margin-bottom:26px}
-.dlogo .mark{width:15px;height:15px;background:#14B8A6;border-radius:4px}
-.dnav a{display:block;color:#C9E8E4;text-decoration:none;padding:11px 12px;
+.dlogo .mark{width:15px;height:15px;background:#FF90E8;border-radius:4px}
+.dnav a{display:block;color:#FFE9F7;text-decoration:none;padding:11px 12px;
 border-radius:10px;font-size:15px;margin:2px 0;transition:all .25s ease}
-.dnav a.on{background:#0F766E;color:#fff;font-weight:700}
-.dnav a:hover{background:#115E59;transform:translateX(5px)}
-.dcard{background:#0F766E;border-radius:14px;padding:14px;margin-top:22px;transition:transform .3s ease}
+.dnav a.on{background:#2B50C8;color:#fff;font-weight:700}
+.dnav a:hover{background:#1E3E8A;transform:translateX(5px)}
+.dcard{background:#2B50C8;border-radius:14px;padding:14px;margin-top:22px;transition:transform .3s ease}
 .dcard:hover{transform:translateY(-3px)}
 .dcard b{font-size:14px}.dcard p{margin:4px 0 0;font-size:12.5px;opacity:.85}
-.dnote{margin-top:auto;background:#08302E;border-radius:12px;padding:12px 14px;font-size:13.5px}
+.dnote{margin-top:auto;background:#000000;border-radius:12px;padding:12px 14px;font-size:13.5px}
 .dmain{display:grid;gap:18px;min-width:0}
 .drow{display:grid;gap:18px;min-width:0}
 .drow.r1{grid-template-columns:290px minmax(0,1fr)}
@@ -54,7 +54,7 @@ animation:rise .6s ease both}
 .dbox h3{margin:0 0 4px;font-size:16.5px}
 .dbox .sub{color:#78716C;font-size:13px;margin:0 0 10px}
 .welcome{min-width:0}
-.avatar{width:56px;height:56px;border-radius:50%;background:#0F766E;color:#fff;
+.avatar{width:56px;height:56px;border-radius:50%;background:#2B50C8;color:#fff;
 display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
 .welcome h2{margin:10px 0 2px;font-size:21px}
 .welcome p{margin:0;color:#78716C;font-size:12.5px;letter-spacing:.05em}
@@ -64,7 +64,7 @@ transition:transform .3s ease,box-shadow .3s ease}
 .chip:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 14px 28px rgba(28,25,23,.18)}
 .chip small{display:block;font-size:12.5px;opacity:.9}
 .chip b{font-size:clamp(20px,2vw,27px)}
-.c1{background:#F59E0B}.c2{background:#0F766E}.c3{background:#44403C}
+.c1{background:#FFDC58}.c2{background:#2B50C8}.c3{background:#44403C}
 .flowline{stroke-dasharray:100;stroke-dashoffset:100;animation:draw 1.8s ease .4s forwards}
 .flowarea{opacity:0;animation:fadein 1.2s ease 1s forwards}
 .dotp{opacity:0;animation:fadein .5s ease 1.6s forwards}
@@ -84,14 +84,14 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 .scard small{display:block;font-size:11.5px;letter-spacing:.07em;opacity:.85}
 .scard b{font-size:19px}.scard p{margin:3px 0 0;font-size:12.5px;opacity:.9}
 .sc1{background:#44403C;transform:translateY(52px) rotate(3deg);z-index:1}
-.sc2{background:#F59E0B;transform:translateY(26px) rotate(-2deg);z-index:2}
-.sc3{background:#0F766E;transform:translateY(0);z-index:3}
+.sc2{background:#FFDC58;transform:translateY(26px) rotate(-2deg);z-index:2}
+.sc3{background:#2B50C8;transform:translateY(0);z-index:3}
 .stackwrap:hover .sc1{transform:translate(-118px,44px) rotate(-7deg)}
 .stackwrap:hover .sc2{transform:translate(118px,44px) rotate(7deg)}
 .stackwrap:hover .sc3{transform:translateY(-8px)}
 .act>div>div{display:flex;gap:9px;font-size:13.5px;margin:9px 0;align-items:baseline;min-width:0}
-.act i{width:9px;height:9px;border-radius:50%;background:#0F766E;flex:none;position:relative;top:1px}
-.act i.warn{background:#F59E0B}.act i.bad{background:#B91C1C}
+.act i{width:9px;height:9px;border-radius:50%;background:#2B50C8;flex:none;position:relative;top:1px}
+.act i.warn{background:#FFDC58}.act i.bad{background:#B91C1C}
 .act>div>div span:first-of-type{flex:1;min-width:0;overflow-wrap:break-word}
 .act>div>div span:last-of-type{flex:none;color:#78716C;font-size:12.5px;white-space:nowrap}
 @media (max-width:1100px){.dshell{grid-template-columns:1fr}
@@ -101,12 +101,19 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 @media (max-width:640px){.stackwrap{height:210px}
 .scard{width:min(250px,86vw)}}
 html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
-/* v3 harmonization: shared tokens with style.css */
-.chip{border:0}
+/* v4 Neubrutalism harmonization */
+.chip{border:3px solid #111110;box-shadow:5px 5px 0 #111110;border-radius:6px;color:#111110}
+.chip.c2{color:#FFF4E4}
+.chip.c3{color:#FFF4E4}
+.sc2{color:#111110}
+.dbox{border:3px solid #111110;box-shadow:7px 7px 0 #111110;border-radius:10px}
+.dbox:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 #111110}
+.chip:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #111110}
+.scard{border:3px solid #111110;box-shadow:7px 7px 0 #111110;border-radius:8px}
+.dside{border:3px solid #111110;box-shadow:7px 7px 0 rgba(17,17,16,.9);border-radius:10px}
+.dcard{border:3px solid #111110;box-shadow:5px 5px 0 #111110;border-radius:8px}
+.dnav a{min-height:44px}
 .lg b,.ring b,.scard b{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
-.dnav a{min-height:44px;display:flex;align-items:center}
-.dbox{transition:transform .3s cubic-bezier(.22,.8,.3,1),box-shadow .3s cubic-bezier(.22,.8,.3,1)}
-.chip{transition:transform .3s cubic-bezier(.22,.8,.3,1),box-shadow .3s cubic-bezier(.22,.8,.3,1)}
 @media(prefers-reduced-motion:reduce){.dbox,.chip,.scard,.dnav a{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -240,14 +247,14 @@ else{
   document.getElementById("dashChart").innerHTML =
     '<svg width="100%" height="195" viewBox="0 0 560 195">'
     +'<path class="flowarea" d="'+area+'" fill="rgba(15,118,110,.14)"/>'
-    +'<path class="flowline" pathLength="100" d="'+line+'" fill="none" stroke="#0F766E" stroke-width="2.5" stroke-linecap="round"/>'
-    + pts.map(function(q){return '<circle class="dotp" cx="'+q.x+'" cy="'+q.y+'" r="4.5" fill="#F59E0B" stroke="#fff" stroke-width="2"/>'}).join("")
+    +'<path class="flowline" pathLength="100" d="'+line+'" fill="none" stroke="#2B50C8" stroke-width="2.5" stroke-linecap="round"/>'
+    + pts.map(function(q){return '<circle class="dotp" cx="'+q.x+'" cy="'+q.y+'" r="4.5" fill="#FFDC58" stroke="#fff" stroke-width="2"/>'}).join("")
     + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(H+18)+'" font-size="11" fill="#78716C" text-anchor="middle">'+esc(shortLabel(q.label))+'</text>'}).join("")
     +'</svg>';
   /* budget donut */
   var committed=Math.max(0, p.budget_total-(p.venue?p.venue.price:0)-p.food_total-p.honorarium_total);
-  var segs=[["Food",p.food_total,"#0F766E"],["Committed",committed,"#F59E0B"],
-    ["Venue",p.venue?p.venue.price:0,"#44403C"],["Judging",p.honorarium_total,"#5EEAD4"]]
+  var segs=[["Food",p.food_total,"#2B50C8"],["Committed",committed,"#FFDC58"],
+    ["Venue",p.venue?p.venue.price:0,"#44403C"],["Judging",p.honorarium_total,"#FFDC58"]]
     .filter(function(s){return s[1]>0});
   var C=2*Math.PI*80, off=0, circles="";
   segs.forEach(function(s){var ln=s[1]/p.budget_total*C;
@@ -275,8 +282,8 @@ else{
     +'<text x="40" y="46" font-size="15" font-weight="700" text-anchor="middle" fill="#1C1917">'+Math.round(pct*100)+'%</text></svg>'
     +'<div><b>'+big+'</b><span>'+small+'</span></div></div>'}
   document.getElementById("dashRings").innerHTML =
-    ring(p.budget_cap?p.budget_total/p.budget_cap:0, "#0F766E", "Budget used", "Rs "+fmt(p.budget_total)+" of "+fmt(p.budget_cap))
-    + ring(p.venue&&p.venue.capacity?p.people_to_feed/p.venue.capacity:0, "#F59E0B", "Venue filled", p.people_to_feed+" of "+(p.venue?p.venue.capacity:"-")+" seats")
+    ring(p.budget_cap?p.budget_total/p.budget_cap:0, "#2B50C8", "Budget used", "Rs "+fmt(p.budget_total)+" of "+fmt(p.budget_cap))
+    + ring(p.venue&&p.venue.capacity?p.people_to_feed/p.venue.capacity:0, "#FFDC58", "Venue filled", p.people_to_feed+" of "+(p.venue?p.venue.capacity:"-")+" seats")
     + ring(p.judges_confirmed?p.judges_used/p.judges_confirmed:0, "#44403C", "Judges placed", p.judges_used+" of "+p.judges_confirmed+" confirmed");
   /* activity */
   var h=(d.history||[]).slice(-4).reverse();
