@@ -478,3 +478,13 @@ body>.wrap{flex:1 0 auto;width:100%}
 /* logo mark (Plan Layers SVG) */
 .brand .mark{background:none;border:none;box-shadow:none;width:34px;height:34px}
 .brand:hover .mark{transform:translate(1px,1px) scale(1.07)}
+
+/* footer links on the grid too */
+.foot-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 26px}
+@media(max-width:640px){.foot-links{grid-template-columns:1fr 1fr}}
+
+/* footer tightened: less dead space, same wordmark */
+.site-footer{margin-top:40px}
+.site-footer .in{padding:26px clamp(16px,4vw,44px) 18px}
+.foot-note{margin-top:16px}
+.wordmark{font-size:clamp(32px,6.5vw,84px);margin:8px 0 0;line-height:.95}
