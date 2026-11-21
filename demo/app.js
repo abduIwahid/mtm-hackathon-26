@@ -331,17 +331,17 @@ function render() {
   const p = S.plan, f = S.facts;
   const allOk = p.checks.every(c => c.ok);
   const banner = "<div class='banner" + (allOk ? "" : " bad") + "'>" +
-    (allOk ? "ALL CHECKS PASS" : "SOME CHECKS FAIL") + " · Total Rs " +
-    fmt(p.budget_total) + " of Rs " + fmt(p.budget_cap) + " · Rs " +
+    (allOk ? "ALL CHECKS PASS" : "SOME CHECKS FAIL") + " / Total Rs " +
+    fmt(p.budget_total) + " of Rs " + fmt(p.budget_cap) + " / Rs " +
     fmt(p.budget_remaining) + " remaining" +
     (S.restored ? " <span class='demotag'>DEMO DETAILS</span>" : "") +
     "</div>";
-  const figStr = p.students + " students · " + p.teams + " teams · " +
-    (p.venue ? p.venue.name : "-") + " · " + p.people_to_feed +
-    " people to feed · Rs " + fmt(p.budget_total) + " of Rs " +
-    fmt(p.budget_cap) + " · " + (allOk ? "ALL CHECKS PASS" : "CHECK FAILING");
+  const figStr = p.students + " students / " + p.teams + " teams / " +
+    (p.venue ? p.venue.name : "-") + " / " + p.people_to_feed +
+    " people to feed / Rs " + fmt(p.budget_total) + " of Rs " +
+    fmt(p.budget_cap) + " / " + (allOk ? "ALL CHECKS PASS" : "CHECK FAILING");
   const marquee = "<div class='marquee'><span class='track'>" +
-    esc(figStr + " · " + figStr + " · " + figStr) + "</span></div>";
+    esc(figStr + " / " + figStr + " / " + figStr) + "</span></div>";
   const v = p.venue || {}, fd = p.food || {};
   const chips = (v.features || []).map(x =>
     "<span class='chip'>" + esc(x) + "</span>").join("");
@@ -375,7 +375,7 @@ function render() {
       (b.minutes >= 25 ? b.minutes + " min" : "") + "</div>";
   });
   timeline += "</div><p class='legend'>" + p.schedule.map(b =>
-    esc(b.item) + " (" + b.minutes + " min)").join(" · ") + "</p>";
+    esc(b.item) + " (" + b.minutes + " min)").join(" / ") + "</p>";
   const schedRows = p.schedule.map(b => "<tr><td class='n'>" + b.start +
     "-" + b.end + "</td><td>" + esc(b.item) + "</td><td class='n'>" +
     b.minutes + " min</td></tr>").join("");
@@ -485,7 +485,7 @@ function render() {
     ? "<span class='cnt'>" + S.rejected.length + "</span>" : "";
   /* trace view */
   const stats = "<p class='note'>Model calls so far: " + S.calls +
-    " · Tokens (as reported by the API): prompt " + fmt(S.tokens.prompt) +
+    " / Tokens (as reported by the API): prompt " + fmt(S.tokens.prompt) +
     ", completion " + fmt(S.tokens.completion) + ", total " +
     fmt(S.tokens.total) + ". Every call used " + MODEL_NAME + ".</p>";
   $("#view-trace").innerHTML = "<h2>Full trace</h2>" + stats +
@@ -557,8 +557,8 @@ function runSim(id) {
   if (p2.people_to_feed !== p0.people_to_feed ||
       p2.judges_used !== p0.judges_used)
     lines.push("People to feed: " + p0.people_to_feed + " \u2192 " +
-      p2.people_to_feed + " · judges used: " + p0.judges_used +
-      " \u2192 " + p2.judges_used + " · judging: " +
+      p2.people_to_feed + " / judges used: " + p0.judges_used +
+      " \u2192 " + p2.judges_used + " / judging: " +
       p0.judging_minutes + " \u2192 " + p2.judging_minutes + " min");
   const failing = p2.checks.filter(x => !x.ok);
   S.sims.unshift({name: SIMS[id] || id, lines: lines,
