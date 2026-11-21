@@ -123,5 +123,6 @@ if("serviceWorker" in navigator){window.addEventListener("load",function(){navig
 var _ip=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();_ip=e;var b=document.getElementById("installBtn");if(b)b.hidden=false});
 document.addEventListener("click",function(e){if(e.target&&e.target.id==="installBtn"&&_ip){_ip.prompt();_ip.userChoice.then(function(){_ip=null;var b=document.getElementById("installBtn");if(b)b.hidden=true})}});
 </script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistration().then(function(r){if(r)r.update()});var _swf=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(!_swf){_swf=true;location.reload()}})}</script>
 </body>
 </html>
