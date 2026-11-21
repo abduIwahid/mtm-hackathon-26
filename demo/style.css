@@ -36,7 +36,6 @@ a{color:var(--blue-d)}
 .brand .mark{width:32px;height:32px;background:var(--ink);flex:none;
   position:relative;box-shadow:3px 3px 0 rgba(17,17,16,.35);
   transition:transform .3s var(--ease)}
-.brand .mark::after{content:"";position:absolute;inset:9px;background:var(--yellow)}
 .brand:hover .mark{transform:rotate(90deg)}
 .brand small{font-weight:600;color:#4A463C;font-size:clamp(11px,1.1vw,13.5px)}
 .mainnav{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:nowrap;min-width:0}
@@ -493,3 +492,10 @@ body>.wrap{flex:1 0 auto;width:100%}
 .ptitle{text-align:center}
 .psub{text-align:center;margin-inline:auto;max-width:70ch}
 .foot-note{margin-inline:auto;text-align:center}
+
+/* audit pass: tap targets */
+.mainnav a{padding:11px 13px}
+.foot-links a{padding:3px 0}
+
+html[data-theme="dark"] .demnote{color:var(--ink)}
+html[data-theme="dark"] .crumbs a{color:var(--yellow)}
