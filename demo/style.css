@@ -488,3 +488,8 @@ body>.wrap{flex:1 0 auto;width:100%}
 .site-footer .in{padding:26px clamp(16px,4vw,44px) 18px}
 .foot-note{margin-top:16px}
 .wordmark{font-size:clamp(32px,6.5vw,84px);margin:8px 0 0;line-height:.95}
+
+/* page titles centred on content pages; footer note centred */
+.ptitle{text-align:center}
+.psub{text-align:center;margin-inline:auto;max-width:70ch}
+.foot-note{margin-inline:auto;text-align:center}

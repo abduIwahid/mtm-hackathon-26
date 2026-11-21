@@ -19,7 +19,7 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <style>
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes draw{to{stroke-dashoffset:0}}
@@ -156,6 +156,16 @@ gap:10px;padding:6px 2px 10px}
 .drow.r3>.dbox:last-child{grid-column:span 12}}
 @media(max-width:700px){
 .drow.r3>.dbox,.drow.r3>.dbox:last-child{grid-column:span 12}}
+
+/* alignment pass: centre where it suits, data stays left */
+.chip{text-align:center}
+.welcome{text-align:center}
+.welcome .avatar{margin:0 auto}
+.donutwrap{display:flex;flex-direction:column;align-items:center}
+#dashLegend{width:100%}
+@media(max-width:1100px){
+.welcome{text-align:left}
+.welcome .avatar{margin:0}}
 </style>
 </head>
 <body>
