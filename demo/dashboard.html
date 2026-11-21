@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
 <style>
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes draw{to{stroke-dashoffset:0}}
@@ -84,6 +84,13 @@ transition:all .45s cubic-bezier(.2,.8,.3,1.2)}
 @media (max-width:640px){.stackwrap{height:210px}
 .scard{width:min(250px,86vw)}}
 html[data-theme="dark"] .dbox{background:#1C1917;border-color:#292524}
+/* v3 harmonization: shared tokens with style.css */
+.chip{border:0}
+.lg b,.ring b,.scard b{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.dnav a{min-height:44px;display:flex;align-items:center}
+.dbox{transition:transform .3s cubic-bezier(.22,.8,.3,1),box-shadow .3s cubic-bezier(.22,.8,.3,1)}
+.chip{transition:transform .3s cubic-bezier(.22,.8,.3,1),box-shadow .3s cubic-bezier(.22,.8,.3,1)}
+@media(prefers-reduced-motion:reduce){.dbox,.chip,.scard,.dnav a{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>

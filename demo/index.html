@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Home - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Home - AXIONS Hackathon Planner</title><script>try{var _t=localStorage.getItem("axions-theme");if(_t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -19,7 +19,8 @@
 </nav>
 </div></header>
 <div class="wrap"><main>
-<section class="hero">
+<section class="hero"><div class="hero-grid">
+<div>
 <h1 class="rise">A hackathon plan, built from its messages - and checked.</h1>
 <p class="sub rise d1">Drop in the message pack - emails, WhatsApp notes and notices in English, Urdu and Roman Urdu. The agent reads every message, plans the venue, schedule, food, judging and budget, and proves the plan passes six checks before you ever see it.</p>
 <div class="cta rise d2">
@@ -28,7 +29,20 @@
 <a class="btn ghost" href="how-it-works.html">How it works</a>
 </div>
 <p class="note rise d3">One small model reads. Plain code does the arithmetic, the checking and the guarding - so figures are exact and bad updates bounce off.</p>
-</section>
+</div>
+<div class="planmock rise d2" role="img" aria-label="Sample plan produced from the brief's message pack: Hall A venue, total Rs 547,400 of a Rs 650,000 cap, all six checks passing">
+<div class="pm-head"><span class="pm-dot"></span><span class="pm-dot"></span><span class="pm-dot"></span><span class="pm-title">SAMPLE PLAN · THE BRIEF'S PACK</span><span class="pm-badge">6/6 CHECKS PASS</span></div>
+<div class="pm-row"><span>Venue · Hall A (200 seats)</span><b>Rs 120,000</b></div>
+<div class="pm-row"><span>Food · 177 people × Rs 1,200</span><b>Rs 212,400</b></div>
+<div class="pm-row"><span>Judging · 17 judges</span><b>Rs 85,000</b></div>
+<div class="pm-row"><span>Committed · prizes, internet, printing</span><b>Rs 130,000</b></div>
+<div class="pm-total"><span>Total</span><b>Rs 547,400</b></div>
+<p class="pm-cap">of Rs 650,000 cap · Rs 102,600 headroom</p>
+<div class="meter"><div style="width:84%"></div></div>
+<div class="chips"><span class="chip">Budget ✓</span><span class="chip">Venue ✓</span><span class="chip">Food ✓</span><span class="chip">Judges ✓</span><span class="chip">Schedule ✓</span><span class="chip">Coverage ✓</span></div>
+<p class="pm-note">The planner's real output on the brief's sample pack. Run the same pack yourself in a new assessment.</p>
+</div>
+</div></section>
 <h2 class="rv">What gets planned</h2>
 <div class="areas rv">
 <div class="area"><h3>VENUE</h3><p>The cheapest room that seats everyone and has every required feature.</p></div>
