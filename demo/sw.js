@@ -1,4 +1,4 @@
-var C = "axions-v7";
+var C = "axions-v8";
 var CORE = ["./", "index.html", "style.css", "manifest.webmanifest",
   "icon-192.png", "icon-512.png", "og-card.png"];
 self.addEventListener("install", function (e) {
