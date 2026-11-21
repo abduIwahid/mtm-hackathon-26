@@ -128,6 +128,18 @@ gap:10px;padding:6px 2px 10px}
 .welcome .avatar{grid-row:1/4;margin:0}
 .welcome h2{margin:0}
 .welcome p{margin:0}}
+
+/* dashboard sizing pass: roomy stacking + aligned rows */
+@media(max-width:1020px){
+.drow.r1{grid-template-columns:1fr}
+.drow.r2{grid-template-columns:1fr}
+.donutwrap{display:flex;flex-direction:column;align-items:center}
+#dashLegend{width:100%;max-width:380px}}
+.drow.r2,.drow.r3{align-items:stretch}
+.drow.r2 .dbox,.drow.r3 .dbox{display:flex;flex-direction:column}
+.drow.r3 .afeed{flex:1}
+.drow.r3 .stackwrap{flex:1}
+.rings{flex:1;justify-content:space-evenly}
 </style>
 </head>
 <body>
@@ -227,7 +239,7 @@ else{
   blocks.forEach(function(b){maxm=Math.max(maxm,b.minutes)});
   blocks.forEach(function(b){var x0=cum/total*W;cum+=b.minutes;var x1=cum/total*W;
     pts.push({x:(x0+x1)/2, y:H-(b.minutes/maxm)*130-10,
-      label:b.item, cx:(x0+x1)/2})});
+      label:b.item, cx:(x0+x1)/2, mins:b.minutes, start:b.start||""})});
   function smooth(q){var s="M"+q[0].x.toFixed(1)+","+q[0].y.toFixed(1);
     for(var i=0;i<q.length-1;i++){var p0=q[Math.max(i-1,0)],p1=q[i],
       p2=q[i+1],p3=q[Math.min(i+2,q.length-1)];
@@ -243,17 +255,24 @@ else{
     if(s==="undefined"||s==="")return "Break";
     return String(s).split(" ")[0]}
   var line=smooth(pts), area=line+" L"+pts[pts.length-1].x+","+H+" L"+pts[0].x+","+H+" Z";
+  var grid=[0,0.5,1].map(function(fr){var gy=H-fr*140;
+    return '<line x1="0" y1="'+gy+'" x2="'+W+'" y2="'+gy+'" stroke="#E3DED2" stroke-width="1" stroke-dasharray="5 5"/>'
+      +'<text x="2" y="'+(gy-5)+'" font-size="10" fill="#A8A29E" font-family="JetBrains Mono,monospace">'+Math.round(maxm*fr)+'m</text>'}).join("");
+  var peak=0; pts.forEach(function(q,i){if(q.mins>pts[peak].mins)peak=i});
   document.getElementById("dashChart").innerHTML =
-    '<svg width="100%" height="195" viewBox="0 0 560 195">'
-    +'<path class="flowarea" d="'+area+'" fill="rgba(15,118,110,.14)"/>'
-    +'<path class="flowline" pathLength="100" d="'+line+'" fill="none" stroke="#2B50C8" stroke-width="2.5" stroke-linecap="round"/>'
-    + pts.map(function(q){return '<circle class="dotp" cx="'+q.x+'" cy="'+q.y+'" r="4.5" fill="#FFDC58" stroke="#fff" stroke-width="2"/>'}).join("")
-    + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(H+18)+'" font-size="11" fill="#78716C" text-anchor="middle">'+esc(shortLabel(q.label))+'</text>'}).join("")
+    '<svg width="100%" height="232" viewBox="0 0 560 232">'
+    + grid
+    +'<path class="flowarea" d="'+area+'" fill="rgba(144,168,237,.32)"/>'
+    +'<path class="flowline" pathLength="100" d="'+line+'" fill="none" stroke="#2B50C8" stroke-width="3" stroke-linecap="round"/>'
+    + pts.map(function(q,i){return '<circle class="dotp" cx="'+q.x+'" cy="'+q.y+'" r="'+(i===peak?6.5:4.5)+'" fill="'+(i===peak?"#FF90E8":"#FFDC58")+'" stroke="#111110" stroke-width="2"/>'}).join("")
+    + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(q.y-13)+'" font-size="12" font-weight="700" text-anchor="middle" fill="#1C1917">'+q.mins+'m</text>'}).join("")
+    + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(H+22)+'" font-size="11.5" font-weight="600" fill="#44403C" text-anchor="middle">'+esc(shortLabel(q.label))+'</text>'}).join("")
+    + pts.map(function(q){return '<text x="'+q.cx+'" y="'+(H+40)+'" font-size="10" fill="#A8A29E" font-family="JetBrains Mono,monospace" text-anchor="middle">'+esc(q.start)+'</text>'}).join("")
     +'</svg>';
   /* budget donut */
   var committed=Math.max(0, p.budget_total-(p.venue?p.venue.price:0)-p.food_total-p.honorarium_total);
-  var segs=[["Food",p.food_total,"#2B50C8"],["Committed",committed,"#FFDC58"],
-    ["Venue",p.venue?p.venue.price:0,"#44403C"],["Judging",p.honorarium_total,"#FFDC58"]]
+  var segs=[["Food",p.food_total,"#2B50C8"],["Committed",committed,"#23C4A8"],
+    ["Venue",p.venue?p.venue.price:0,"#FF90E8"],["Judging",p.honorarium_total,"#FFDC58"]]
     .filter(function(s){return s[1]>0});
   var C=2*Math.PI*80, off=0, circles="";
   segs.forEach(function(s){var ln=s[1]/p.budget_total*C;
