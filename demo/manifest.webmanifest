@@ -1,6 +1,6 @@
 {
-  "name": "PlanBanao",
-  "short_name": "PlanBanao",
+  "name": "Plan Banao",
+  "short_name": "Plan Banao",
   "description": "Reads a pack of event messages and builds a complete, validated hackathon plan: venue, schedule, food, judging and budget.",
   "start_url": ".",
   "scope": ".",
