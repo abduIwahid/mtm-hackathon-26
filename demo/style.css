@@ -90,7 +90,6 @@ p{margin:8px 0}
 .mut,.note{color:var(--mut)}
 .note{font-size:14px}
 .sub{color:#3D3A33}
-.lead{font-size:17px}
 code{font-family:var(--font-mono);font-size:.92em;background:var(--yellow-t);
   border:1.5px solid var(--ink);padding:0 5px}
 main p a,main li a{font-weight:600;text-underline-offset:3px}
@@ -397,7 +396,7 @@ html[data-theme="dark"] .msgq,html[data-theme="dark"] table{
   background:#1E1B17;border-color:#F3EBD8;box-shadow:6px 6px 0 #000}
 html[data-theme="dark"] .card:hover,html[data-theme="dark"] .feat:hover,
 html[data-theme="dark"] .step:hover{box-shadow:8px 8px 0 #000}
-html[data-theme="dark"] .mut,html[data-theme="dark"] .note,
+html[data-theme="dark"] .note,
 html[data-theme="dark"] .sub,html[data-theme="dark"] .capnote,
 html[data-theme="dark"] .legend{color:#B8B0A0}
 html[data-theme="dark"] .hero .sub{color:#E8E0CC}
@@ -507,3 +506,7 @@ html[data-theme="dark"] .crumbs a{color:var(--yellow)}
 .prose p,.psub{hyphens:none}
 .psub{text-wrap:balance;max-width:780px}
 .steps{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+
+/* audit round 2: touch targets */
+@media(max-width:900px){.mainnav a{display:flex;align-items:center;min-height:44px}}
+.crumbs a{padding:4px 2px}

@@ -23,7 +23,7 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -80,7 +80,7 @@
 <p class="note">Send updates in plain words - "printing ka bill 15,000 ho gaya" - or ask about the plan: "budget kitna bacha?", "risks batao". Updates go through the same checks as any message; questions are answered from the plan's own figures, with no model call.</p>
 <div class="chatbox" id="chatThread"></div>
 <div class="btnrow">
-<input type="text" id="chatText" placeholder="Message the agent..." style="flex:1;min-width:200px">
+<input type="text" id="chatText" aria-label="Message the agent" placeholder="Message the agent..." style="flex:1;min-width:200px">
 <button class="btn" id="chatSend">Send</button>
 </div>
 <div class="panel breakpanel">
@@ -97,7 +97,7 @@
 <div class="panel">
 <h3>Send an update message</h3>
 <p class="note">One message at a time, exactly as it arrived. The agent reads it, recomputes only what it touches, and keeps the plan valid - or rejects it with the reason.</p>
-<textarea id="updText" style="min-height:80px" placeholder="Paste one new message here"></textarea>
+<textarea id="updText" aria-label="Paste one new message" style="min-height:80px" placeholder="Paste one new message here"></textarea>
 <div class="btnrow"><button class="btn secondary" id="applyBtn">Apply update</button></div>
 </div>
 </section>

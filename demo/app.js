@@ -498,10 +498,12 @@ function recoHtml() {
   if (!recos.length) return "";
   return "<h2>Risks and recommendations</h2><p class='note'>Generated " +
     "in code from the plan's own figures - each item names the " +
-    "problem and the lever that fixes it.</p><ul class='reco'>" +
-    recos.map(r => "<li class='" + (r[0] === "risk" ? "rk" : "ad") +
-      "'><b>" + (r[0] === "risk" ? "RISK" : "ADVICE") + "</b> " +
-      esc(r[1]) + "</li>").join("") + "</ul>";
+    "problem and the lever that fixes it.</p>" +
+    recos.map(r => "<div class='reco" + (r[0] === "risk" ? " risk" : "") +
+      "'><span class='" + (r[0] === "risk" ? "rk" : "ad") + "'>" +
+      (r[0] === "risk" ? "!" : "\u2713") + "</span><div><b>" +
+      (r[0] === "risk" ? "RISK" : "ADVICE") + "</b> " + esc(r[1]) +
+      "</div></div>").join("");
 }
 
 /* ---------------- what-if simulator ----------------
