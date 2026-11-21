@@ -23,7 +23,7 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <header class="site-header"><div class="in">
@@ -67,9 +67,9 @@
 <div class="btnrow" style="justify-content:flex-end;margin-top:14px"><button class="btn secondary" id="resetBtn">Start a new plan</button></div>
 <nav class="tabs">
 <button class="tab" data-view="view-plan" aria-selected="true">Plan</button>
+<button class="tab" data-view="view-chat" aria-selected="false">Agent chat</button>
 <button class="tab" data-view="view-facts" aria-selected="false">Facts &amp; messages</button>
 <button class="tab" data-view="view-updates" aria-selected="false">Updates<span id="updBadge"></span></button>
-<button class="tab" data-view="view-chat" aria-selected="false">Agent chat</button>
 <button class="tab" data-view="view-trace" aria-selected="false">Trace</button>
 </nav>
 <section id="view-plan" class="view active"></section>
@@ -78,6 +78,7 @@
 <section id="view-chat" class="view">
 <h2>Talk to the agent</h2>
 <p class="note">Send updates in plain words - "printing ka bill 15,000 ho gaya" - or ask about the plan: "budget kitna bacha?", "risks batao". Updates go through the same checks as any message; questions are answered from the plan's own figures, with no model call.</p>
+<div id="reqTrack" hidden></div>
 <div class="chatbox" id="chatThread"></div>
 <div class="btnrow">
 <input type="text" id="chatText" aria-label="Message the agent" placeholder="Message the agent..." style="flex:1;min-width:200px">
@@ -116,7 +117,7 @@
 <div class="wordmark">AXIONS</div>
 </div></footer>
 <script src="planner.js?v=3"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 <script>(function(){var b=document.getElementById("themeBtn");if(!b)return;function lab(){b.textContent=document.documentElement.getAttribute("data-theme")==="dark"?"Light mode":"Dark mode"}lab();b.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(d){document.documentElement.removeAttribute("data-theme");try{localStorage.setItem("axions-theme","light")}catch(e){}}else{document.documentElement.setAttribute("data-theme","dark");try{localStorage.setItem("axions-theme","dark")}catch(e){}}lab()})})();</script>
 <script>
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}

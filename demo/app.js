@@ -155,6 +155,49 @@ function answerQuestion(raw) {
       p.people_to_feed + " people to feed in total.";
   return null;
 }
+/* ---------------- request tracker ----------------
+   The chat shows the live phase of the user's latest request -
+   received, reading, checking, updating - then the outcome, so
+   they can see the agent actually working. Driven by the real
+   pipeline stages in runUpdate, never by a timer. */
+const TRACK_STEPS = ["Received", "Reading the message",
+  "Checking against the plan", "Updating the plan"];
+let trackEl = null;
+function trackStart(text) {
+  trackEl = $("#reqTrack"); if (!trackEl) return;
+  trackEl.hidden = false;
+  trackEl.innerHTML = "<div class='track'><div class='track-h'><b>" +
+    "Your request</b><span class='track-state work'>WORKING</span>" +
+    "</div><p class='track-msg'>&ldquo;" + esc(text) + "&rdquo;</p>" +
+    "<ol class='tsteps'>" + TRACK_STEPS.map((t, i) =>
+      "<li data-i='" + i + "'><span class='tdot'></span>" + t +
+      "</li>").join("") + "</ol><p class='track-out'></p></div>";
+  trackStep(1);
+}
+function trackStep(n) {
+  if (!trackEl || trackEl.hidden) return;
+  trackEl.querySelectorAll(".tsteps li").forEach(li => {
+    const i = +li.getAttribute("data-i");
+    li.className = i < n ? "done" : (i === n ? "active" : "");
+    li.querySelector(".tdot").textContent = i < n ? "\u2713" : "";
+  });
+}
+function trackDone(outcome, kind) {
+  if (!trackEl || trackEl.hidden) return;
+  trackStep(4);
+  const st = trackEl.querySelector(".track-state");
+  if (st) { st.textContent = "DONE"; st.className = "track-state done"; }
+  const out = trackEl.querySelector(".track-out");
+  if (out) { out.textContent = outcome; out.className = "track-out " + (kind || "ok"); }
+}
+function trackQuick(outcome) {
+  trackEl = $("#reqTrack"); if (!trackEl) return;
+  trackEl.hidden = false;
+  trackEl.innerHTML = "<div class='track'><div class='track-h'><b>" +
+    "Your request</b><span class='track-state done'>DONE</span></div>" +
+    "<p class='track-out ok' style='margin-top:6px'>" + esc(outcome) +
+    "</p></div>";
+}
 async function sendChat(raw) {
   const text = raw.trim();
   if (!text) return;
@@ -166,6 +209,8 @@ async function sendChat(raw) {
   }
   const ans = answerQuestion(text);
   if (ans) {
+    trackQuick("Answered from the plan's own figures - no model " +
+      "call was needed.");
     agentSay(ans);
     note("chat question answered from the plan - no model call");
     return;
@@ -196,9 +241,12 @@ async function runFull(text) {
     " of Rs " + fmt(S.plan.budget_cap) + ", " + okN + " of 6 checks " +
     "pass. Send me update messages here, or ask about the plan.");
   const recos = recommendations(S.facts, S.plan);
-  if (recos.length)
-    agentSay("My recommendations:\n" + recos.map((r, i) =>
-      (i + 1) + ". [" + r[0].toUpperCase() + "] " + r[1]).join("\n"));
+  const nRisk = recos.filter(r => r[0] === "risk").length;
+  if (nRisk)
+    agentSay("Heads up: " + nRisk + " risk(s) flagged - see Risks " +
+      "and recommendation in the Plan tab.");
+  const advice = primaryAdvice(recos, S.plan);
+  if (advice) agentSay("My recommendation: " + advice);
 }
 
 /* ---------------- update run ---------------- */
@@ -211,12 +259,14 @@ function rejectUpdate(text, reason, areas) {
     detail: reason, total: S.plan.budget_total});
   S.diffHtml = "<div class='diffbox bad'><p><b>Update rejected - the " +
     "plan did not change.</b></p><p>" + esc(reason) + "</p></div>";
+  trackDone("Rejected - the plan did not change. " + reason, "bad");
   note("update REJECTED: " + reason);
   agentSay("I kept that message out: " + reason);
 }
 async function runUpdate(text) {
   if (!S || !S.plan) { setStatus("Run a plan first.", true); return; }
   busy(true);
+  trackStart(text);
   try {
     setStatus("Reading the new message…");
     S.seq += 1;
@@ -224,6 +274,7 @@ async function runUpdate(text) {
       classifyPrompt(text, planSummary(S.plan)), 400);
     const kind = cls.kind || "fact";
     const areas = (cls.areas || []).filter(a => AREAS.includes(a));
+    trackStep(2);
     const scan = scanConflictingDirective(text, S.plan);
     if (scan) {
       const reason = evaluateDirectives([scan], S.plan);
@@ -242,6 +293,8 @@ async function runUpdate(text) {
       note("request noted, plan unchanged");
       agentSay("Noted as a request - it is not in the plan or the " +
         "budget: " + (cls.summary || text));
+      trackDone("Noted as a request - it is listed under Facts " +
+        "& messages; the plan and the budget did not change.");
       render(); return;
     }
     if (kind === "irrelevant") {
@@ -252,9 +305,12 @@ async function runUpdate(text) {
         "The message does not change any figure in the plan.</p></div>";
       note("message irrelevant, plan unchanged");
       agentSay("That message does not change anything in the plan.");
+      trackDone("No change - this message does not affect any " +
+        "figure in the plan.");
       render(); return;
     }
     const tag = areas.length ? areas[0] : "reading";
+    trackStep(3);
     const ext = await callModel(tag,
       extractionPrompt(text, S.facts, true), 6000);
     const candidate = structuredClone(S.facts);
@@ -281,8 +337,11 @@ async function runUpdate(text) {
       ". Total is now Rs " + fmt(plan2.budget_total) + " (was Rs " +
       fmt(prev.budget_total) + "); " +
       plan2.checks.filter(c => c.ok).length + " of 6 checks pass.");
+    trackDone("Applied - the plan was rebuilt and re-checked. " +
+      "New total: Rs " + fmt(plan2.budget_total) + ".");
     render();
   } catch (e) {
+    trackDone("Stopped - " + e.message, "bad");
     setStatus(e.message, true);
   } finally {
     busy(false);
@@ -403,6 +462,11 @@ function render() {
     "</span> " + esc(c.name) + " - " + esc(c.detail) + "</li>")
     .join("") + "</ul>";
   $("#view-plan").innerHTML = banner + marquee + S.diffHtml + cards +
+    "<div class='chatcta'><div><b>Questions or an update?</b>" +
+    "<p class='note'>Message the agent - every change is re-checked " +
+    "against this plan before it is applied.</p></div>" +
+    "<button class='btn' onclick=\"activateTab('view-chat')\">Talk " +
+    "to the agent</button></div>" +
     "<h2>Schedule</h2>" + timeline + "<table>" + schedRows + "</table>" +
     "<h2>Budget detail</h2><p class='note'>Click any line to see where " +
     "the figure came from.</p><table>" + budgetRows +
@@ -493,17 +557,37 @@ function render() {
   $("#results").style.display = "block";
   persist();
 }
+function primaryAdvice(recos, plan) {
+  const adv = recos.filter(r => r[0] === "advice");
+  if (adv.length) return adv[0][1];
+  const risks = recos.filter(r => r[0] === "risk");
+  if (risks.length)
+    return "Act on the top risk first - " + risks[0][1];
+  if (plan && plan.checks.every(c => c.ok))
+    return "The plan passes all 6 checks, with Rs " +
+      fmt(plan.budget_remaining) + " of the Rs " + fmt(plan.budget_cap) +
+      " cap still free. Keep that amount untouched as a buffer for " +
+      "on-the-day surprises - it is the cheapest insurance this " +
+      "plan has.";
+  return null;
+}
 function recoHtml() {
   const recos = recommendations(S.facts, S.plan);
-  if (!recos.length) return "";
-  return "<h2>Risks and recommendations</h2><p class='note'>Generated " +
-    "in code from the plan's own figures - each item names the " +
-    "problem and the lever that fixes it.</p>" +
-    recos.map(r => "<div class='reco" + (r[0] === "risk" ? " risk" : "") +
-      "'><span class='" + (r[0] === "risk" ? "rk" : "ad") + "'>" +
-      (r[0] === "risk" ? "!" : "\u2713") + "</span><div><b>" +
-      (r[0] === "risk" ? "RISK" : "ADVICE") + "</b> " + esc(r[1]) +
-      "</div></div>").join("");
+  const risks = recos.filter(r => r[0] === "risk");
+  const advice = primaryAdvice(recos, S.plan);
+  let h = "<h2>Risks and recommendation</h2><p class='note'>From the " +
+    "plan's own figures: every risk the checks can see, and the one " +
+    "clearest next step.</p>";
+  if (risks.length)
+    h += risks.map(r => "<div class='reco risk'><span class='rk'>!</" +
+      "span><div><b>RISK</b> " + esc(r[1]) + "</div></div>").join("");
+  else
+    h += "<p class='note'>No risks flagged - every check passes " +
+      "and no headroom is dangerously thin.</p>";
+  if (advice)
+    h += "<div class='reco rec-main'><span class='ad'>\u2713</span>" +
+      "<div><b>RECOMMENDATION</b> " + esc(advice) + "</div></div>";
+  return h;
 }
 
 /* ---------------- what-if simulator ----------------

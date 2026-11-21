@@ -510,3 +510,32 @@ html[data-theme="dark"] .crumbs a{color:var(--yellow)}
 /* audit round 2: touch targets */
 @media(max-width:900px){.mainnav a{display:flex;align-items:center;min-height:44px}}
 .crumbs a{padding:4px 2px}
+
+/* request tracker: the agent shows its working, step by step */
+.track{background:#fff;border:2.5px solid var(--ink);border-radius:8px;box-shadow:var(--sh-sm);padding:14px 16px;margin:0 0 14px}
+.track-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.track-h b{font-size:15px}
+.track-state{font-size:12px;font-weight:800;letter-spacing:.04em}
+.track-state.work{color:var(--green-d)}
+.track-state.done{color:var(--mut)}
+.track-msg{margin:6px 0 10px;font-weight:600;font-size:14.5px}
+.tsteps{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.tsteps li{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--mut)}
+.tsteps li.done{color:var(--ink)}
+.tsteps li.active{color:var(--ink);font-weight:700}
+.tdot{width:17px;height:17px;flex:none;border-radius:50%;border:2.5px solid var(--ink);background:#fff;display:inline-grid;place-items:center;font-size:10px;font-weight:900;line-height:1}
+.tsteps li.done .tdot{background:var(--green-d);border-color:var(--green-d);color:#fff}
+.tsteps li.active .tdot{background:var(--yellow);animation:tpulse 1s ease-in-out infinite}
+@keyframes tpulse{50%{transform:scale(1.22)}}
+.track-out{margin:11px 0 0;font-weight:700;font-size:14.5px}
+.track-out.ok{color:var(--green-d)}
+.track-out.bad{color:var(--red)}
+html[data-theme="dark"] .track{background:#26221A;color:#F5EFE2}
+html[data-theme="dark"] .track .tsteps li{color:#B8B0A0}
+html[data-theme="dark"] .track .tsteps li.done,html[data-theme="dark"] .track .tsteps li.active{color:#F5EFE2}
+.reco.rec-main{background:#FFF3C4;border-width:3px}
+html[data-theme="dark"] .reco.rec-main{background:#3A331F}
+.chatcta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:#fff;border:2.5px solid var(--ink);border-radius:8px;box-shadow:var(--sh-sm);padding:14px 16px;margin:14px 0}
+.chatcta p{margin:2px 0 0}
+html[data-theme="dark"] .chatcta{background:#26221A;color:#F5EFE2}
+@media(prefers-reduced-motion:reduce){.tsteps li.active .tdot{animation:none}}

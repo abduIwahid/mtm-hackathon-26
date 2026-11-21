@@ -18,7 +18,7 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 <style>
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes draw{to{stroke-dashoffset:0}}
@@ -179,6 +179,14 @@ html[data-theme="dark"] .ring span{color:#B8B0A0}
 html[data-theme="dark"] #dashChart text{fill:#D8D2C2}
 html[data-theme="dark"] #dashDonut text{fill:#F3EBD8}
 html[data-theme="dark"] .chip{box-shadow:5px 5px 0 #000}
+
+/* phone pass: legend flush right, grid children cannot overflow */
+.drow>.dbox{min-width:0}
+.stackwrap{min-width:0}
+.scard{max-width:100%}
+#dashLegend{width:100%;max-width:none}
+#dashDonut{display:flex;justify-content:center}
+.donutwrap{align-items:stretch}
 </style>
 </head>
 <body>
