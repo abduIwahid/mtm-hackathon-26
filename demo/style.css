@@ -499,3 +499,11 @@ body>.wrap{flex:1 0 auto;width:100%}
 
 html[data-theme="dark"] .demnote{color:var(--ink)}
 html[data-theme="dark"] .crumbs a{color:var(--yellow)}
+
+/* content pages: centered column and detail, no broken words */
+.prose{margin-inline:auto}
+.prose h2,.prose p{text-align:center}
+.prose ul{text-align:center;list-style-position:inside;padding-left:0}
+.prose p,.psub{hyphens:none}
+.psub{text-wrap:balance;max-width:780px}
+.steps{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}

@@ -1,4 +1,4 @@
-var C = "plankaro-v8";
+var C = "plankaro-v9";
 var CORE = ["./", "index.html", "style.css", "manifest.webmanifest", "logo.svg",
   "icon-192.png", "icon-512.png", "og-card.png"];
 self.addEventListener("install", function (e) {
