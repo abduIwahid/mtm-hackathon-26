@@ -1095,7 +1095,7 @@ padding:12px;overflow-x:auto}
 .card,.rejbox,.banner{break-inside:avoid}}
 </style></head><body><div class="wrap">
 <header>
-<h1>Hackathon Plan - PlanKaro</h1>
+<h1>Hackathon Plan - PlanBanao</h1>
 <button class='pbtn' onclick='window.print()'>Print<span class='more'> / save as PDF</span></button>
 <div class="sub">%s students, %s teams, %s people to feed in total</div>
 </header>

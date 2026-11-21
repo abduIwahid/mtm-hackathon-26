@@ -1,4 +1,4 @@
-# PlanKaro — MTM Hackathon '26
+# PlanBanao — MTM Hackathon '26
 
 **Event:** MTM Hackathon '26 (Mind-to-Machine), GDG On Campus CUI Wah — Wednesday 18 November 2026.
 **Team:** AXIONS — GDG On Campus CUI Attock. Lead + presenter: Abdul Wahid.

@@ -1,5 +1,5 @@
 "use strict";
-/* app.js - PlanKaro (browser edition).
+/* app.js - PlanBanao (browser edition).
    Same design as main.py: the model only reads, planner.js plans,
    validators guard. State lives in this page only. */
 const $ = s => document.querySelector(s);

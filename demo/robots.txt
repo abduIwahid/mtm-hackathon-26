@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://plankaro-planner.vercel.app/sitemap.xml
+Sitemap: https://planbanao.vercel.app/sitemap.xml
