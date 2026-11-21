@@ -333,7 +333,9 @@ function render() {
   const banner = "<div class='banner" + (allOk ? "" : " bad") + "'>" +
     (allOk ? "ALL CHECKS PASS" : "SOME CHECKS FAIL") + " · Total Rs " +
     fmt(p.budget_total) + " of Rs " + fmt(p.budget_cap) + " · Rs " +
-    fmt(p.budget_remaining) + " remaining</div>";
+    fmt(p.budget_remaining) + " remaining" +
+    (S.restored ? " <span class='demotag'>DEMO DETAILS</span>" : "") +
+    "</div>";
   const figStr = p.students + " students · " + p.teams + " teams · " +
     (p.venue ? p.venue.name : "-") + " · " + p.people_to_feed +
     " people to feed · Rs " + fmt(p.budget_total) + " of Rs " +
@@ -776,12 +778,12 @@ function restore() {
       history: d.history || [], calls: d.calls || 0,
       tokens: d.tokens || {prompt: 0, completion: 0, total: 0},
       trace: d.trace || [], diffHtml: "", seq: d.seq || 1,
-      sims: d.sims || []};
+      sims: d.sims || [], restored: true};
     render();
     if (d.chat) $("#chatThread").innerHTML = d.chat;
-    setStatus("Previous session restored - the agent remembers the " +
-      "earlier messages and runs. Send the next update in Agent " +
-      "chat, or start a new plan.");
+    setStatus("Demo details - this is the sample plan saved in this " +
+      "browser from an earlier run, not live data. Send the next update " +
+      "in Agent chat, or start a new plan.");
     agentSay("Welcome back - I still have the current plan (total " +
       "Rs " + fmt(S.plan.budget_total) + ") and the history of " +
       S.history.length + " run(s). Send the next message whenever " +
