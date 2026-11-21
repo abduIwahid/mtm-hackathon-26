@@ -464,3 +464,10 @@ svg{max-width:100%}
 font-family:var(--font-mono);font-weight:700;font-size:11.5px;
 letter-spacing:.06em;border-radius:4px;padding:3px 8px;margin-left:9px;
 vertical-align:2px}
+
+/* ---------- round: burger lines, sticky footer, roomier steps ---------- */
+.burger span{display:block;width:22px;height:3px;background:var(--ink);
+border-radius:2px;margin:5px auto}
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+body>.wrap{flex:1 0 auto;width:100%}
+.steps{grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))}
