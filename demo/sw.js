@@ -1,5 +1,5 @@
-var C = "plankaro-v3";
-var CORE = ["./", "index.html", "style.css", "manifest.webmanifest",
+var C = "plankaro-v4";
+var CORE = ["./", "index.html", "style.css", "manifest.webmanifest", "logo.svg",
   "icon-192.png", "icon-512.png", "og-card.png"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(C).then(function (c) { return c.addAll(CORE); })

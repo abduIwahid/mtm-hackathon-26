@@ -474,3 +474,7 @@ body>.wrap{flex:1 0 auto;width:100%}
 
 /* prose uses more of the page; less dead space on wide screens */
 .prose{max-width:88ch}
+
+/* logo mark (Plan Layers SVG) */
+.brand .mark{background:none;border:none;box-shadow:none;width:34px;height:34px}
+.brand:hover .mark{transform:translate(1px,1px) scale(1.07)}
